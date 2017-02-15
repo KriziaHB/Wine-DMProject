@@ -18,8 +18,10 @@ string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes
 void readFromFile() {
 	//full_data.txt & wines.csv
 	//C:/Users/buckkr/Source/Repos/Wine-DMProject
-	ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
-	fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
+	//ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
+	//fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
+	ifstream reviews("../full_data.txt", ios::in);
+	fstream wineCSV("../wines.csv", ios::in);
 
 	//read to wineReviews[][] 
 	if (reviews.is_open()) {
