@@ -94,18 +94,22 @@ void readFromFile() {
 }
 
 
-double JaccardDistance(int x1, int y1, int x2, int y2) {
-	int m01 = 0; //# of attributes of A is 0 while 1 in B 
-	int m10 = 0; //# of attributes of A is 1 while 0 in B 
-	int m11 = 0; //# of attributes where A and B have value of 1 
+double JaccardDistance(int x1, int x2) {
+	int a = 0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
+	int b = 0; //# of attributes where A and B have value of 1 
 	double dist = 0.0;
 
 
-	// count up M01, M10, M11 between the two points 
-
+	// count up a (different values) and b (both have 1) between the two points 
+	for (int i = 1; i < 306; i++) {
+		if ((wines[x1][i] == "1") && (wines[x2][i] == "1"))
+			b++; 
+		else if (wines[x1][i] != wines[x2][i])
+			a++; 
+	}
 
 	// formula 
-	dist = double((m01 + m10) / (m01 + m10 + m11));
+	dist = double((a) / (a + b)); 
 	return(dist);
 }
 
