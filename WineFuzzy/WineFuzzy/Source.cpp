@@ -16,7 +16,7 @@ string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes
 
 
 void readFromFile() {
-	//full_data.txt & wines.xlsx 
+	//full_data.txt & wines.csv
 	//C:/Users/buckkr/Source/Repos/Wine-DMProject
 	ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
 	fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
@@ -109,6 +109,7 @@ double JaccardDistance(int x1, int x2) {
 	}
 
 	// formula 
+	//Simplified by adding together both cases of 1 vs 0 when comparing wines 
 	dist = double((a) / (a + b)); 
 	return(dist);
 }
