@@ -83,11 +83,14 @@ void readFromFile() {
 			stringstream stream(line);
 			//iterate through sections within each line 
 			while (getline(stream, section, ',')) {
-				int check = section.find("\n");
-				if (check > 1) {
-					counter++;
+				counter++; 
+				//go down to next row 
+				if (counter == 306) {
+					counter = 0;
 					i++;
 					j = 0;
+					wines[i][j] = section; 
+					cout << wines[i][j] << endl;
 				}
 				else {
 					wines[i][j] = section;
