@@ -1,6 +1,6 @@
 //Krizia Houston Buck 
 //Fuzzy C-Means Clustering with Jaccard's Distance Formula 
-//02/13/2017 
+//02/16/2017 
 
 #include <iostream> 
 #include <iomanip> 
@@ -23,12 +23,9 @@ void readFromFile() {
 	//C:/Users/buckkr/Source/Repos/Wine-DMProject
 	ifstream reviews("../res/full_data.txt", ios::in);
 	fstream wineCSV("../res/wines.csv", ios::in);
-
 	//KRIZIA 
 	//ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
 	//fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
-
-
 
 	//read to wineReviews[][] 
 	if (reviews.is_open()) {
@@ -111,7 +108,6 @@ double JaccardDistance(int x1, int x2) {
 	double b = 0.0; //# of attributes where A and B have value of 1 
 	double dist = 0.0;
 
-
 	// count up a (different values) and b (both have 1) between the two points 
 	for (int i = 1; i < 306; i++) {
 		if ((wines[x1][i] == "1") && (wines[x2][i] == "1"))
@@ -120,13 +116,13 @@ double JaccardDistance(int x1, int x2) {
 			a++; 
 	}
 
-	// formula 
-	//Simplified by adding together both cases of 1 vs 0 when comparing wines 
+	//Formula: simplified by adding together both cases of 1 vs 0 when comparing wines 
 	dist = double(a / (a + b)); 
 	return(dist);
 }
 
-vector<vector<double>> FeedData() {
+
+vector<vector<double>> FeedData() { //Chris Moore 
 
 	vector<vector<double>> distance_data;
 	vector<double> element;
@@ -162,7 +158,9 @@ void main() {
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
+	cout << "**In Main before FeedData" << endl; 
 	distance_data = FeedData();
+	cout << "**Back in Main after FeedData" << endl; 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
