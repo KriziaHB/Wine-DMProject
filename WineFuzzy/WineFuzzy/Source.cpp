@@ -153,7 +153,7 @@ void main() {
 	cout << "**Back in main after readFromFile executed" << endl;
 
 	//Test Jaccard's 
-	double dist1 = JaccardDistance(0, 1); 
+	double dist1 = JaccardDistance(1, 2); 
 	double dist2 = JaccardDistance(2, 3); 
 	cout << "Wine 1 vs Wine 2: " << dist1 << endl; 
 	cout << "Wine 2 vs Wine 3: " << dist2 << endl; 
