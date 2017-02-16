@@ -139,6 +139,111 @@ vector<vector<double>> FeedData() { //Chris Moore
 }
 
 
+//MODIFY FOR wines 2D array 
+void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
+{
+	FILE *fp;
+	//open file for output
+	fopen_s(&fp, filename, "wb");//writing in binary format
+	if (!fp) {
+		fprintf(stderr, "Unable to open file '%s'\n", filename);
+		exit(1);
+	}
+
+	//write the header file
+	//image format
+	fprintf(fp, "P5\n");
+
+	//image size
+	fprintf(fp, "%d %d\n", dim, dim);
+
+	// rgb component depth
+	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
+
+
+	//Write to file  
+	//int *p; 
+	for (int x = 0; x < dim; x++)
+	{
+		for (int y = 0; y < dim; y++)
+		{
+			if (num == 1)
+			{
+				//Black if alive, white if dead 
+				int pix;
+				if (case1[x][y].alive == 1)
+				{
+					pix = 0;
+					//	std::cout << "+ "; 
+				}
+				else
+				{
+					pix = RGB_COMPONENT_COLOR;
+					//	std::cout << "  ";
+				}
+
+				fputc((char)pix, fp);
+			}
+			else if (num == 2)
+			{
+				//Black if alive, white if dead 
+				int pix;
+				if (case2[x][y].alive == 1)
+				{
+					pix = 0;
+					//	std::cout << "+ "; 
+				}
+				else
+				{
+					pix = RGB_COMPONENT_COLOR;
+					//	std::cout << "  ";
+				}
+
+				fputc((char)pix, fp);
+			}
+			else if (num == 3)
+			{
+				//Black if alive, white if dead 
+				int pix;
+				if (case3[x][y].alive == 1)
+				{
+					pix = 0;
+					//	std::cout << "+ ";
+				}
+				else
+				{
+					pix = RGB_COMPONENT_COLOR;
+					//	std::cout << "  ";
+				}
+
+				fputc((char)pix, fp);
+			}
+			else
+			{
+				//Black if alive, white if dead 
+				int pix;
+				if (case4[x][y].alive == 1)
+				{
+					pix = 0;
+					//	std::cout << "+ "; 
+				}
+				else
+				{
+					pix = RGB_COMPONENT_COLOR;
+					//	std::cout << "  ";
+				}
+
+				fputc((char)pix, fp);
+			}
+		}
+		//	if (num == 1)
+		//		std::cout << endl;
+	}
+
+	fclose(fp);
+}
+
+
 void main() {
 
 	cout << "**In main" << endl;
@@ -161,6 +266,9 @@ void main() {
 	cout << "**In Main before FeedData" << endl; 
 	distance_data = FeedData();
 	cout << "**Back in Main after FeedData" << endl; 
+
+	//Visual representation of the 2D array (matrix) of wines and their attributes 
+	writePGM("../res/WINEmatrix.pgm", 1011, 306);
 
 	//Wait to terminate 
 	cout << "Terminate the program";
