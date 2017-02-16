@@ -145,7 +145,10 @@ void main() {
 	double dist2 = JaccardDistance(2, 3); 
 	cout << "Wine 1 vs Wine 2: " << dist1 << endl; 
 	cout << "Wine 2 vs Wine 3: " << dist2 << endl; 
-
+	double dist3 = JaccardDistance(1, 2);
+	double dist4 = JaccardDistance(2, 3);
+	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
+	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
 
 
