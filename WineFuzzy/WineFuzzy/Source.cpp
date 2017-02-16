@@ -8,12 +8,15 @@
 #include <fstream> 
 #include <sstream> 
 #include <string> 
+#include <stdlib.h>
 #include <stdio.h>
+#include <cstdio> 
 #include <vector>
 using namespace std;
 
 string wineReviews[1011][50]; //Name, Vintage, Grade, Review, Author, Attributes 1 through n, Price, Country, Region, IssueDate 
 string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes 
+#define RGB_COMPONENT_COLOR 255
 
 const int X_COL = 1011;
 const int Y_COL = 1011;
@@ -140,6 +143,7 @@ vector<vector<double>> FeedData() { //Chris Moore
 
 
 //MODIFY FOR wines 2D array 
+
 void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
 {
 	FILE *fp;
@@ -155,89 +159,25 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 	fprintf(fp, "P5\n");
 
 	//image size
-	fprintf(fp, "%d %d\n", dim, dim);
+	fprintf(fp, "%d %d\n", dim1, dim2);
 
 	// rgb component depth
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
 
-
 	//Write to file  
-	//int *p; 
-	for (int x = 0; x < dim; x++)
+	int pix; 
+	for (int x = 1; x < dim1; x++)
 	{
-		for (int y = 0; y < dim; y++)
+		for (int y = 1; y < dim2; y++)
 		{
-			if (num == 1)
-			{
-				//Black if alive, white if dead 
-				int pix;
-				if (case1[x][y].alive == 1)
-				{
-					pix = 0;
-					//	std::cout << "+ "; 
-				}
-				else
-				{
-					pix = RGB_COMPONENT_COLOR;
-					//	std::cout << "  ";
-				}
-
-				fputc((char)pix, fp);
-			}
-			else if (num == 2)
-			{
-				//Black if alive, white if dead 
-				int pix;
-				if (case2[x][y].alive == 1)
-				{
-					pix = 0;
-					//	std::cout << "+ "; 
-				}
-				else
-				{
-					pix = RGB_COMPONENT_COLOR;
-					//	std::cout << "  ";
-				}
-
-				fputc((char)pix, fp);
-			}
-			else if (num == 3)
-			{
-				//Black if alive, white if dead 
-				int pix;
-				if (case3[x][y].alive == 1)
-				{
-					pix = 0;
-					//	std::cout << "+ ";
-				}
-				else
-				{
-					pix = RGB_COMPONENT_COLOR;
-					//	std::cout << "  ";
-				}
-
-				fputc((char)pix, fp);
-			}
+			//Black if has the attribute, white if does not 
+			if (wines[x][y] == "1")
+				pix = RGB_COMPONENT_COLOR;
 			else
-			{
-				//Black if alive, white if dead 
-				int pix;
-				if (case4[x][y].alive == 1)
-				{
-					pix = 0;
-					//	std::cout << "+ "; 
-				}
-				else
-				{
-					pix = RGB_COMPONENT_COLOR;
-					//	std::cout << "  ";
-				}
+				pix = 0; 
 
-				fputc((char)pix, fp);
-			}
+			fputc((char)pix, fp);
 		}
-		//	if (num == 1)
-		//		std::cout << endl;
 	}
 
 	fclose(fp);
