@@ -56,7 +56,7 @@ void readFromFile() {
 				}
 				else { //???? how to separate out each attribute that is in all caps? 
 					wineReviews[i][j] = section;
-					cout << wineReviews[i][j] << endl;
+	//				cout << wineReviews[i][j] << endl;
 					j++;
 				}
 			}
@@ -90,11 +90,11 @@ void readFromFile() {
 					i++;
 					j = 0;
 					wines[i][j] = section; 
-					cout << wines[i][j] << endl;
+	//				cout << wines[i][j] << endl;
 				}
 				else {
 					wines[i][j] = section;
-					cout << wines[i][j] << endl;
+	//				cout << wines[i][j] << endl;
 					j++;
 				}
 			}
@@ -112,8 +112,8 @@ void readFromFile() {
 
 
 double JaccardDistance(int x1, int x2) {
-	int a = 0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
-	int b = 0; //# of attributes where A and B have value of 1 
+	double a = 0.0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
+	double b = 0.0; //# of attributes where A and B have value of 1 
 	double dist = 0.0;
 
 
@@ -127,7 +127,7 @@ double JaccardDistance(int x1, int x2) {
 
 	// formula 
 	//Simplified by adding together both cases of 1 vs 0 when comparing wines 
-	dist = double((a) / (a + b)); 
+	dist = double(a / (a + b)); 
 	return(dist);
 }
 
@@ -138,8 +138,15 @@ void main() {
 
 	//read in files to 2D arrays 
 	readFromFile();
-
 	cout << "**Back in main after readFromFile executed" << endl;
+
+	//Test Jaccard's 
+	double dist1 = JaccardDistance(1, 2); 
+	double dist2 = JaccardDistance(2, 3); 
+	cout << "Wine 1 vs Wine 2: " << dist1 << endl; 
+	cout << "Wine 2 vs Wine 3: " << dist2 << endl; 
+
+
 
 
 	//Wait to terminate 
