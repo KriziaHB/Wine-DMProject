@@ -20,19 +20,11 @@ void readFromFile() {
 	//C:/Users/buckkr/Source/Repos/Wine-DMProject
 	ifstream reviews("../res/full_data.txt", ios::in);
 	fstream wineCSV("../res/wines.csv", ios::in);
-	//Add your reviews and wineCSV files below in this format and comment out all others when running on your machine 
 
 	//KRIZIA 
 	//ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
 	//fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
 
-	//CALEB 
-
-
-	//CHRIS 
-
-
-	//JEREMY 
 
 
 	//read to wineReviews[][] 
