@@ -8,12 +8,15 @@
 #include <fstream> 
 #include <sstream> 
 #include <string> 
-#include <stdio.h> 
+#include <stdio.h>
+#include <vector>
 using namespace std;
 
 string wineReviews[1011][50]; //Name, Vintage, Grade, Review, Author, Attributes 1 through n, Price, Country, Region, IssueDate 
 string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes 
 
+const int X_COL = 1011;
+const int Y_COL = 1011;
 
 void readFromFile() {
 	//full_data.txt & wines.csv
@@ -123,10 +126,27 @@ double JaccardDistance(int x1, int x2) {
 	return(dist);
 }
 
+vector<vector<double>> FeedData() {
+
+	vector<vector<double>> distance_data;
+	vector<double> element;
+
+	for (int i = 1; i < 10; i++) {
+		for (int j = 1; j < 10; j++) {
+			element.push_back(JaccardDistance(i, j));
+		}
+		distance_data.push_back(element);
+		element.clear();
+	}
+	
+	return distance_data;
+}
+
 
 void main() {
 
 	cout << "**In main" << endl;
+	vector<vector<double>> distance_data; //Multidimensional vector for holding Jacard's distance calculation for each element and their respective comparisons
 
 	//read in files to 2D arrays 
 	readFromFile();
@@ -142,7 +162,7 @@ void main() {
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
-
+	distance_data = FeedData();
 
 	//Wait to terminate 
 	cout << "Terminate the program";
