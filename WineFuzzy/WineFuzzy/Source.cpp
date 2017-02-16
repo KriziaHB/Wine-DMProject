@@ -142,8 +142,6 @@ vector<vector<double>> FeedData() { //Chris Moore
 }
 
 
-//MODIFY FOR wines 2D array 
-
 void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
 {
 	FILE *fp;
@@ -165,11 +163,11 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
 
 	//Write to file  
-	int pix; 
 	for (int x = 1; x < dim1; x++)
 	{
 		for (int y = 1; y < dim2; y++)
 		{
+			int pix; 
 			//Black if has the attribute, white if does not 
 			if (wines[x][y] == "1")
 				pix = RGB_COMPONENT_COLOR;
@@ -208,7 +206,8 @@ void main() {
 	cout << "**Back in Main after FeedData" << endl; 
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
-	writePGM("../res/WINEmatrix.pgm", 1011, 306);
+//	writePGM("../res/WINEmatrix.pgm", 1011, 306);
+	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
