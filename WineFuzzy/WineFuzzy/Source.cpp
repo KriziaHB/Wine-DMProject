@@ -76,7 +76,7 @@ void readFromFile() {
 		int j = 0;
 		int counter = 0;
 
-		//iterate through text file lines 
+		//iterate through CSV file lines 
 		while (getline(wineCSV, line)) {
 			string section;
 			stringstream stream(line);
@@ -89,11 +89,11 @@ void readFromFile() {
 					i++;
 					j = 0;
 					wines[i][j] = section; 
-	//				cout << wines[i][j] << endl;
+//					cout << "wines[" << i << "][" << j << "]: " << wines[i][j] << ";" << endl;
 				}
 				else {
 					wines[i][j] = section;
-	//				cout << wines[i][j] << endl;
+//					cout << "wines[" << i << "][" << j << "]: " << wines[i][j] << ";" << endl;
 					j++;
 				}
 			}
@@ -150,7 +150,8 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 {
 	FILE *fp;
 	//open file for output
-	fopen_s(&fp, filename, "wb");//writing in binary format
+	fopen_s(&fp, "C:/Users/buckkr/Desktop/WINEmatrix.pgm", "wb");//writing in binary format
+//	fp = fopen("C:/Users/buckkr/Desktop/WINEmatrix.pgm", "wb");
 	if (!fp) {
 		fprintf(stderr, "Unable to open file '%s'\n", filename);
 		exit(1);
@@ -158,10 +159,10 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 
 	//write the header file
 	//image format
-	fprintf(fp, "P6\n");
+	fprintf(fp, "P2\n");
 
 	//image size
-	fprintf(fp, "%d %d\n", dim1, dim2);
+	fprintf(fp, "%d %d\n", dim2, dim1);
 
 	// rgb component depth
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
@@ -171,13 +172,13 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 	{
 		for (int y = 1; y < dim2; y++)
 		{
-			int pix;
+			char pix;
 			//Black if has the attribute, white if does not 
-			if (wines[x][y] == "1")
-				pix = RGB_COMPONENT_COLOR;
+			int val = stoi(wines[x][y]); 
+			if (val == 1)
+				pix = RGB_COMPONENT_COLOR; 
 			else
 				pix = 0;
-
 			fputc(char(pix), fp);
 		}
 	}
@@ -211,7 +212,7 @@ void main() {
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
 //	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.ppm", 1011, 306); 
+	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1010, 305); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
