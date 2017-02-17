@@ -43,28 +43,32 @@ void readFromFile() {
 			stringstream stream(line);
 			//iterate through sections within each line 
 			while (getline(stream, section, '|')) {
-				int check = section.find("\n");
-				if (check > 1) {
-					counter++;
-					i++;
-					j = 0;
-				}
-				else { //???? how to separate out each attribute that is in all caps? 
-					wineReviews[i][j] = section;
-	//				cout << wineReviews[i][j] << endl;
-					j++;
+				wineReviews[i][j] = section;
+				j++;
+				counter++;
+				if (counter == 5)
+				{
+					while (getline(stream, section, ','))
+					{
+						if (section.at(0) == '|')
+							break;
+						wineReviews[i][j] = section;
+						j++;
+					}
+					counter = 0;
+					getline(stream, section, '|');
 				}
 			}
+			counter = 0;
+			j = 0;
+			i++;
 		}
-		cout << "i: " << i << endl;
-		cout << "j: " << j << endl;
-		cout << "Counter: " << counter << endl;
-
 		//Cleanup 
 		reviews.close();
 	}
 	else
 		cout << "Unable to open the Wine Reviews text file" << endl;
+
 	//read to wines[][] 
 	if (wineCSV.is_open()) {
 		string line;
@@ -154,7 +158,7 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 
 	//write the header file
 	//image format
-	fprintf(fp, "P5\n");
+	fprintf(fp, "P6\n");
 
 	//image size
 	fprintf(fp, "%d %d\n", dim1, dim2);
@@ -167,17 +171,16 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 	{
 		for (int y = 1; y < dim2; y++)
 		{
-			int pix; 
+			int pix;
 			//Black if has the attribute, white if does not 
 			if (wines[x][y] == "1")
 				pix = RGB_COMPONENT_COLOR;
 			else
-				pix = 0; 
+				pix = 0;
 
-			fputc((char)pix, fp);
+			fputc(char(pix), fp);
 		}
 	}
-
 	fclose(fp);
 }
 
@@ -201,13 +204,14 @@ void main() {
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
+	//FeedData by Chris Moore 
 	cout << "**In Main before FeedData" << endl; 
 	distance_data = FeedData();
 	cout << "**Back in Main after FeedData" << endl; 
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
 //	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
+	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.ppm", 1011, 306); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
