@@ -98,9 +98,9 @@ void readFromFile() {
 				}
 			}
 		}
-		cout << "i: " << i << endl;
-		cout << "j: " << j << endl;
-		cout << "Counter: " << counter << endl;
+//		cout << "i: " << i << endl;
+//		cout << "j: " << j << endl;
+//		cout << "Counter: " << counter << endl;
 
 		//Cleanup 
 		wineCSV.close();
@@ -129,28 +129,14 @@ double JaccardDistance(int x1, int x2) {
 }
 
 
-vector<vector<double>> FeedData() { //Chris Moore 
-
-	vector<vector<double>> distance_data;
-	vector<double> element;
-
-	for (int i = 1; i < 10; i++) {
-		for (int j = 1; j < 10; j++) {
-			element.push_back(JaccardDistance(i, j));
-		}
-		distance_data.push_back(element);
-		element.clear();
-	}
-	
-	return distance_data;
-}
 
 
+//STILL NOT WORKING 
 void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
 {
 	FILE *fp;
 	//open file for output
-	fopen_s(&fp, "C:/Users/buckkr/Desktop/WINEmatrix.pgm", "wb");//writing in binary format
+	fopen_s(&fp, "C:/Users/buckkr/Desktop/WINEmatrix.ppm", "wb");//writing in binary format
 //	fp = fopen("C:/Users/buckkr/Desktop/WINEmatrix.pgm", "wb");
 	if (!fp) {
 		fprintf(stderr, "Unable to open file '%s'\n", filename);
@@ -159,27 +145,37 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 
 	//write the header file
 	//image format
-	fprintf(fp, "P2\n");
+	fprintf(fp, "P3\n");
 
 	//image size
 	fprintf(fp, "%d %d\n", dim2, dim1);
 
 	// rgb component depth
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
+//	fprintf(fp, "255"); 
 
 	//Write to file  
-	for (int x = 1; x < dim1; x++)
+	for (int row = 0; row < dim1; row++)
 	{
-		for (int y = 1; y < dim2; y++)
+		for (int col = 0; col < dim2; col++)
 		{
-			char pix;
+			int pix = 255; 
+			if ((row == 0) || (col == 0))
+				fputc(char(pix), fp); 
+
 			//Black if has the attribute, white if does not 
-			int val = stoi(wines[x][y]); 
-			if (val == 1)
-				pix = RGB_COMPONENT_COLOR; 
-			else
-				pix = 0;
-			fputc(char(pix), fp);
+		//	int val = stoi(wines[x][y]); 
+			if (wines[row][col] == "1") {
+				pix = 0; 
+				fputc(char(pix), fp); 
+			}
+			//	pix = RGB_COMPONENT_COLOR; 
+			else {
+				pix = 255; 
+				fputc(char(pix), fp); 
+			}
+				//	pix = 0;
+		//	fputc(char(pix), fp);
 		}
 	}
 	fclose(fp);
@@ -205,10 +201,7 @@ void main() {
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
-	//FeedData by Chris Moore 
-	cout << "**In Main before FeedData" << endl; 
-	distance_data = FeedData();
-	cout << "**Back in Main after FeedData" << endl; 
+	
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
 //	writePGM("../res/WINEmatrix.pgm", 1011, 306);
