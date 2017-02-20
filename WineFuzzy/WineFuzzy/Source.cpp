@@ -201,6 +201,15 @@ void main() {
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
+
+	//User defined k (number of clusters) 
+	int k; 
+	cout << "Please enter an integer value for the number of clusters 'k': "; 
+	cin >> k; 
+	if (k < 2)
+		k = 2; 
+	//Call to Membership function 
+
 	
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
