@@ -129,6 +129,11 @@ double JaccardDistance(int x1, int x2) {
 }
 
 
+void membership(int k) {
+	
+
+
+}
 
 
 //STILL NOT WORKING 
@@ -183,13 +188,9 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 
 
 void main() {
-
-	cout << "**In main" << endl;
-	vector<vector<double>> distance_data; //Multidimensional vector for holding Jacard's distance calculation for each element and their respective comparisons
-
 	//read in files to 2D arrays 
 	readFromFile();
-	cout << "**Back in main after readFromFile executed" << endl;
+
 
 	//Test Jaccard's 
 	double dist1 = JaccardDistance(1, 2); 
@@ -206,15 +207,16 @@ void main() {
 	int k; 
 	cout << "Please enter an integer value for the number of clusters 'k': "; 
 	cin >> k; 
+	k = int(k); 
 	if (k < 2)
 		k = 2; 
 	//Call to Membership function 
-
+	membership(k); 
 	
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
 //	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1010, 305); 
+	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
