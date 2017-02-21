@@ -1,6 +1,6 @@
 //Krizia Houston Buck 
 //Fuzzy C-Means Clustering with Jaccard's Distance Formula 
-//02/21/2017 
+//02/16/2017 
 
 #include <iostream> 
 #include <iomanip> 
@@ -134,6 +134,7 @@ void membership(int k) {
 }
 
 
+//STILL NOT WORKING 
 void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
 {
 	FILE *fp;
@@ -203,13 +204,9 @@ void main() {
 	membership(k); 
 	
 
-	//Visual representation of the original 2D array (matrix) of wines and their attributes 
+	//Visual representation of the 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306);
 //	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
-
-	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
-
-	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
