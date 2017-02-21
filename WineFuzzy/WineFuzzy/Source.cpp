@@ -8,12 +8,15 @@
 #include <fstream> 
 #include <sstream> 
 #include <string> 
-#include <stdio.h> 
+#include <stdio.h>
+#include <vector>
 using namespace std;
 
 string wineReviews[1011][50]; //Name, Vintage, Grade, Review, Author, Attributes 1 through n, Price, Country, Region, IssueDate 
 string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes 
 
+const int X_COL = 1011;
+const int Y_COL = 1011;
 
 void readFromFile() {
 	//full_data.txt & wines.csv
@@ -48,7 +51,7 @@ void readFromFile() {
 				}
 				else { //???? how to separate out each attribute that is in all caps? 
 					wineReviews[i][j] = section;
-	//				cout << wineReviews[i][j] << endl;
+					//				cout << wineReviews[i][j] << endl;
 					j++;
 				}
 			}
@@ -75,18 +78,18 @@ void readFromFile() {
 			stringstream stream(line);
 			//iterate through sections within each line 
 			while (getline(stream, section, ',')) {
-				counter++; 
+				counter++;
 				//go down to next row 
 				if (counter == 306) {
 					counter = 0;
 					i++;
 					j = 0;
-					wines[i][j] = section; 
-	//				cout << wines[i][j] << endl;
+					wines[i][j] = section;
+					//				cout << wines[i][j] << endl;
 				}
 				else {
 					wines[i][j] = section;
-	//				cout << wines[i][j] << endl;
+					//				cout << wines[i][j] << endl;
 					j++;
 				}
 			}
@@ -112,37 +115,54 @@ double JaccardDistance(int x1, int x2) {
 	// count up a (different values) and b (both have 1) between the two points 
 	for (int i = 1; i < 306; i++) {
 		if ((wines[x1][i] == "1") && (wines[x2][i] == "1"))
-			b++; 
+			b++;
 		else if (wines[x1][i] != wines[x2][i])
-			a++; 
+			a++;
 	}
 
 	// formula 
 	//Simplified by adding together both cases of 1 vs 0 when comparing wines 
-	dist = double(a / (a + b)); 
+	dist = double(a / (a + b));
 	return(dist);
+}
+
+vector<vector<double>> FeedData() {
+
+	vector<vector<double>> distance_data;
+	vector<double> element;
+
+	for (int i = 1; i < 10; i++) {
+		for (int j = 1; j < 10; j++) {
+			element.push_back(JaccardDistance(i, j));
+		}
+		distance_data.push_back(element);
+		element.clear();
+	}
+
+	return distance_data;
 }
 
 
 void main() {
 
 	cout << "**In main" << endl;
+	vector<vector<double>> distance_data; //Multidimensional vector for holding Jacard's distance calculation for each element and their respective comparisons
 
-	//read in files to 2D arrays 
+										  //read in files to 2D arrays 
 	readFromFile();
 	cout << "**Back in main after readFromFile executed" << endl;
 
 	//Test Jaccard's 
-	double dist1 = JaccardDistance(1, 2); 
-	double dist2 = JaccardDistance(2, 3); 
-	cout << "Wine 1 vs Wine 2: " << dist1 << endl; 
-	cout << "Wine 2 vs Wine 3: " << dist2 << endl; 
+	double dist1 = JaccardDistance(1, 2);
+	double dist2 = JaccardDistance(2, 3);
+	cout << "Wine 1 vs Wine 2: " << dist1 << endl;
+	cout << "Wine 2 vs Wine 3: " << dist2 << endl;
 	double dist3 = JaccardDistance(3, 4);
 	double dist4 = JaccardDistance(4, 5);
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 
-
+	distance_data = FeedData();
 
 	//Wait to terminate 
 	cout << "Terminate the program";
