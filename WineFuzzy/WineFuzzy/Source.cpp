@@ -141,8 +141,7 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 {
 	FILE *fp;
 	//open file for output
-	fopen_s(&fp, "C:/Users/buckkr/Desktop/WINEmatrix.ppm", "wb");//writing in binary format
-//	fp = fopen("C:/Users/buckkr/Desktop/WINEmatrix.pgm", "wb");
+	fopen_s(&fp, filename, "wb");//writing in binary format
 	if (!fp) {
 		fprintf(stderr, "Unable to open file '%s'\n", filename);
 		exit(1);
@@ -150,14 +149,11 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 
 	//write the header file
 	//image format
-	fprintf(fp, "P3\n");
-
+	fprintf(fp, "P5\n");
 	//image size
 	fprintf(fp, "%d %d\n", dim2, dim1);
-
 	// rgb component depth
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
-//	fprintf(fp, "255"); 
 
 	//Write to file  
 	for (int row = 0; row < dim1; row++)
@@ -167,20 +163,15 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 			int pix = 255; 
 			if ((row == 0) || (col == 0))
 				fputc(char(pix), fp); 
-
-			//Black if has the attribute, white if does not 
-		//	int val = stoi(wines[x][y]); 
-			if (wines[row][col] == "1") {
+			//Black (0) if has the attribute, white (255) if does not 
+			else if (wines[row][col] == "1") {
 				pix = 0; 
 				fputc(char(pix), fp); 
 			}
-			//	pix = RGB_COMPONENT_COLOR; 
 			else {
-				pix = 255; 
+				pix = RGB_COMPONENT_COLOR;
 				fputc(char(pix), fp); 
-			}
-				//	pix = 0;
-		//	fputc(char(pix), fp);
+			} 
 		}
 	}
 	fclose(fp);
@@ -211,6 +202,7 @@ void main() {
 	if (k < 2)
 		k = 2; 
 	//Call to Membership function 
+	cout << "k value: " << k << endl; 
 	membership(k); 
 	
 
