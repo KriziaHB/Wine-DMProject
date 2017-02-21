@@ -154,9 +154,6 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 void main() {
 	//read in files to 2D arrays 
 	readFromFile();
-
-  cout << "**In main" << endl;
-	readFromFile();
 	FuzzyC fuzzy(2, wines);
 
 	//Test Jaccard's 
@@ -171,10 +168,8 @@ void main() {
 
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-//	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
 
 	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
-
 	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306); 
 
 
