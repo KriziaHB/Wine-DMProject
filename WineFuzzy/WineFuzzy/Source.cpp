@@ -154,7 +154,7 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 void main() {
 	//read in files to 2D arrays 
 	readFromFile();
-	FuzzyC fuzzy(2, wines);
+	FuzzyC fuzzy(2, 2, wines);
 
 	//Test Jaccard's 
 	double dist1 = fuzzy.JaccardDistance(1, 2);
@@ -171,7 +171,6 @@ void main() {
 
 	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
 	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306); 
-
 
 	//Wait to terminate 
 	cout << "Terminate the program";

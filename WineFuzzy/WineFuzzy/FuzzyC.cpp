@@ -1,11 +1,12 @@
 #include "FuzzyC.h"
 #include <vector>
 #include <stdlib.h>
+#include <math.h>
 
 using namespace std;
 
 
-FuzzyC::FuzzyC(int clusters, string wines[1011][306])
+FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 {
 	this->clusters = clusters;
 	vector<string> element;
@@ -16,9 +17,10 @@ FuzzyC::FuzzyC(int clusters, string wines[1011][306])
 		wines_data.push_back(element);
 		element.clear();
 	}
-
+	m = m_value;
 	FeedData();
 	initializeClusters();
+	initializeMembership();
 }
 
 
@@ -48,19 +50,43 @@ void FuzzyC::initializeClusters() {
 	for (int i = 0; i < clusters; i++) {
 		cluster_points.push_back(rand() % 1100 + 1);
 	}
+	//for test purposes
+	cluster_points[1] = 20;
 }
 
+vector<vector<double>> FuzzyC::initializeMembership() {
+	vector<double> element;
+	for (int i = 0; i < distance_data.size(); i++) {
+		for (int j = 0; j < cluster_points.size(); j++) {
+			element.push_back(CalculateMembership(i, cluster_points[j]));
+		}
+		membership_data.push_back(element);
+		element.clear();
+	}
+	return membership_data;
+}
+
+double FuzzyC::CalculateMembership(int wine, int cluster){
+	double value = 0;
+	double distance_to_cluster = distance_data[wine].at(cluster);
+	double power_value = 2 / (m - 1);
+	for (int i = 0; i < cluster_points.size() ; i++) {
+		value += pow((distance_to_cluster / distance_data[wine].at(cluster_points[i])), power_value);
+	}
+	value = 1 / value;
+
+	return value;
+}
 vector<vector<double>> FuzzyC::FeedData() {
 
 	vector<double> element;
-
-	for (int i = 1; i < 10; i++) {
-		for (int j = 1; j < 10; j++) {
+	for (int i = 1; i < 50; i++) {
+		for (int j = 1; j < 50; j++) {
 			element.push_back(JaccardDistance(i, j));
 		}
 		distance_data.push_back(element);
 		element.clear();
 	}
-
 	return distance_data;
+
 }
