@@ -5,9 +5,8 @@ class FuzzyC
 {
 private:
 	int clusters;
-	string wines_data[1011][306];
 	vector<vector<double>> distance_data;
-	
+	vector<vector<string>> wines_data;
 public:
 	FuzzyC(int clusters, string wines[1011][306]);
 	~FuzzyC();

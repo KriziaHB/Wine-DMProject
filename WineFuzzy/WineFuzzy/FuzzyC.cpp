@@ -7,10 +7,13 @@ using namespace std;
 FuzzyC::FuzzyC(int clusters, string wines[1011][306])
 {
 	this->clusters = clusters;
-	for (int i = 0; i < 1011; i++) {
+	vector<string> element;
+	for (int i = 0; i < 1101; i++) {
 		for (int j = 0; j < 306; j++) {
-			wines_data[i][j] = wines[i][j];
+			element.push_back(wines[i][j]);
 		}
+		wines_data.push_back(element);
+		element.clear();
 	}
 }
 
@@ -26,9 +29,9 @@ double FuzzyC::JaccardDistance(int x1, int x2) {
 
 	// count up a (different values) and b (both have 1) between the two points 
 	for (int i = 1; i < 306; i++) {
-		if ((wines_data[x1][i] == "1") && (wines_data[x2][i] == "1"))
+		if ((wines_data[x1].at(i) == "1") && (wines_data[x2].at(i) == "1"))
 			b++;
-		else if (wines_data[x1][i] != wines_data[x2][i])
+		else if (wines_data[x1].at(i) != wines_data[x2].at(i))
 			a++;
 	}
 
