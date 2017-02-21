@@ -18,8 +18,13 @@ string wineReviews[1011][50]; //Name, Vintage, Grade, Review, Author, Attributes
 string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes 
 #define RGB_COMPONENT_COLOR 255
 
-const int X_COL = 1011;
-const int Y_COL = 1011;
+
+//CHRIS 
+int clusters;
+vector<int> cluster_points;
+vector<vector<double>> distance_data;
+vector<vector<string>> wines_data;
+vector<vector<double>> membership_data;
 
 void readFromFile() {
 	//full_data.txt & wines.csv
@@ -136,6 +141,51 @@ void membership(int k) {
 }
 
 
+//ADDING CHRIS'S FUNCTIONS 
+void initializeClusters(int clusters) {
+	for (int i = 0; i < clusters; i++) {
+		//Centroids of each cluster 
+		cluster_points.push_back(rand() % 1011 + 1);
+	}
+}
+
+void FeedData() {
+	vector<double> element;
+
+	//Test with i and j as 1 going to 10 for a small sample size for now 
+	for (int i = 1; i < 10; i++) {
+		for (int j = 1; j < 10; j++) { //Eventually, j needs to be j = i + 1 so that we don't fill up the entire matrix 
+			element.push_back(JaccardDistance(i, j));
+		}
+		//distance_data is a vector of Jaccard's Distances between wines 
+		distance_data.push_back(element);
+		element.clear();
+	}
+
+//	return distance_data;
+}
+
+void FuzzyC(int clusters) //, string wines[1011][306])
+{
+//	this->clusters = clusters;
+	//Element is a row of wine data 
+	vector<string> element;
+	for (int i = 1; i < 1011; i++) {
+		for (int j = 1; j < 306; j++) {
+			element.push_back(wines[i][j]);
+		}
+		//wines_data is all of the rows with the columns from element 
+		wines_data.push_back(element);
+		element.clear();
+	}
+
+	FeedData();
+//	initializeClusters(clusters);
+}
+//END CHRIS'S FUNCTIONS 
+
+
+
 void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
 {
 	FILE *fp;
@@ -181,7 +231,7 @@ void main() {
 	//read in files to 2D arrays 
 	readFromFile();
 
-
+	/*
 	//Test Jaccard's 
 	double dist1 = JaccardDistance(1, 2); 
 	double dist2 = JaccardDistance(2, 3); 
@@ -190,7 +240,7 @@ void main() {
 	double dist3 = JaccardDistance(3, 4);
 	double dist4 = JaccardDistance(4, 5);
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
-	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
+	cout << "Wine 4 vs Wine 5: " << dist4 << endl; */
 
 
 	//User defined k (number of clusters) 
@@ -202,12 +252,12 @@ void main() {
 		k = 2; 
 	//Call to Membership function 
 	cout << "k value: " << k << endl; 
-	membership(k); 
+//	membership(k); 
+	initializeClusters(k); 
 	
 
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-//	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
 
 	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
 
