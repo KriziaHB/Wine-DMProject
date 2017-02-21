@@ -26,9 +26,7 @@ void readFromFile() {
 	//C:/Users/buckkr/Source/Repos/Wine-DMProject
 	ifstream reviews("../res/full_data.txt", ios::in);
 	fstream wineCSV("../res/wines.csv", ios::in);
-	//KRIZIA 
-	//ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
-	//fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
+
 
 	//read to wineReviews[][] 
 	if (reviews.is_open()) {
