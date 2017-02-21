@@ -207,8 +207,8 @@ void main() {
 	
 
 	//Visual representation of the 2D array (matrix) of wines and their attributes 
-//	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
+	writePGM("../res/WINEmatrix.pgm", 1011, 306);
+//	writePGM("C:/Users/buckkr/Desktop/WINEmatrix.pgm", 1011, 306); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
