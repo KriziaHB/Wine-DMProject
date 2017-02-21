@@ -1,5 +1,6 @@
 #include "FuzzyC.h"
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -15,6 +16,9 @@ FuzzyC::FuzzyC(int clusters, string wines[1011][306])
 		wines_data.push_back(element);
 		element.clear();
 	}
+
+	FeedData();
+	initializeClusters();
 }
 
 
@@ -38,6 +42,12 @@ double FuzzyC::JaccardDistance(int x1, int x2) {
 	//Formula: simplified by adding together both cases of 1 vs 0 when comparing wines 
 	dist = double(a / (a + b));
 	return(dist);
+}
+
+void FuzzyC::initializeClusters() {
+	for (int i = 0; i < clusters; i++) {
+		cluster_points.push_back(rand() % 1100 + 1);
+	}
 }
 
 vector<vector<double>> FuzzyC::FeedData() {

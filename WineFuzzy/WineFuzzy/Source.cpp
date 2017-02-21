@@ -112,7 +112,6 @@ void main() {
 	cout << "**In main" << endl;
 	readFromFile();
 	FuzzyC fuzzy(2, wines);
-										  //read in files to 2D arrays 
 	
 	cout << "**Back in main after readFromFile executed" << endl;
 
