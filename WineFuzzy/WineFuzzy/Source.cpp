@@ -134,8 +134,14 @@ double JaccardDistance(int x1, int x2) {
 }
 
 
-void membership(int k) {
+void membership(int k) { //determine membership of each wine to a cluster 
 	
+
+
+}
+
+
+void centroid(int k) { //recalculate centroid (when calculations don't change much then the program can stop) 
 
 
 }
@@ -161,17 +167,16 @@ void FeedData() {
 		distance_data.push_back(element);
 		element.clear();
 	}
-
 //	return distance_data;
 }
 
+
 void FuzzyC(int clusters) //, string wines[1011][306])
 {
-//	this->clusters = clusters;
 	//Element is a row of wine data 
 	vector<string> element;
-	for (int i = 1; i < 1011; i++) {
-		for (int j = 1; j < 306; j++) {
+	for (int i = 0; i < 1011; i++) {
+		for (int j = 0; j < 306; j++) {
 			element.push_back(wines[i][j]);
 		}
 		//wines_data is all of the rows with the columns from element 
@@ -180,7 +185,7 @@ void FuzzyC(int clusters) //, string wines[1011][306])
 	}
 
 	FeedData();
-//	initializeClusters(clusters);
+	initializeClusters(clusters);
 }
 //END CHRIS'S FUNCTIONS 
 
@@ -250,10 +255,9 @@ void main() {
 	k = int(k); 
 	if (k < 2)
 		k = 2; 
-	//Call to Membership function 
+	//Call to start up Fuzzy C  
 	cout << "k value: " << k << endl; 
-//	membership(k); 
-	initializeClusters(k); 
+	FuzzyC(k); 
 	
 
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
