@@ -22,6 +22,7 @@ string sortedWines[1011][306]; //KHB: use for printing out the final image after
 
 //CHRIS 
 int clusters;
+int m; 
 vector<int> cluster_points;
 vector<vector<double>> distance_data;
 vector<vector<string>> wines_data;
@@ -160,33 +161,85 @@ double JaccardDistance(int x1, int x2) {
 }
 
 
-void membership(int k) { //determine membership of each wine to a cluster 
-	
-
-
-}
-
-
-void centroid(int k) { //recalculate centroid (when calculations don't change much then the program can stop) 
-
-
-}
 
 
 //ADDING CHRIS'S FUNCTIONS 
+void initializeMembership() { //determine membership of each wine to a cluster 
+	//Generate Jaccard's distance
+	FeedData();
+	//Clear old membership data (This is for calculating new values)
+	membership_data.clear();
+	vector<double> element;
+	for (int i = 0; i < distance_data.size(); i++) {
+		for (int j = 0; j < cluster_points.size(); j++) {
+			element.push_back(CalculateMembership(i, cluster_points[j])); //Calculate membership value for wine to each cluster point
+		}
+		membership_data.push_back(element);//Collect both cluster points for single wine and loop
+		element.clear();
+	}
+}
+
+
+void generateCenters() { //recalculate centroid (when calculations don't change much then the program can stop) 
+	vector<string> element;
+	for (int i = 0; i < cluster_points.size(); i++) {
+		for (int j = 0; j < 304; j++) {
+			element.push_back(to_string(calculateCentroid(j, i)));//For each attribute calculate the centroid (or average of all points in attribute)
+		}
+		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
+		wines_data.push_back(element); //Append new centroid to wine data
+		element.clear();
+	}
+}
+
+double calculateCentroid(int col, int cluster) {
+	double numerator = 0;
+	double denominator = 0;
+	double centroid = 0;
+	for (int i = 0; i < distance_data.size(); i++) {
+		numerator += pow(membership_data[i].at(cluster), m) * stod(wines_data[i].at(col));
+		denominator += pow(membership_data[i].at(cluster), m);
+	}
+	centroid = numerator / denominator;
+	return centroid;
+}
+
+double CalculateMembership(int wine, int cluster) {
+	double value = 0;
+	//Check if current wine is in cluster
+	for (int i = 0; i < cluster_points.size(); i++) {
+		if (wine == cluster_points[i]) {
+			value = 1;
+			return value;
+		}
+	}
+	double distance_to_cluster = distance_data[wine].at(cluster);
+	double power_value = 2 / (m - 1);
+	for (int i = 0; i < cluster_points.size(); i++) {
+		value += pow((distance_to_cluster / distance_data[wine].at(cluster_points[i])), power_value);//summation of all distance to cluster points
+	}
+	value = 1 / value;
+
+	return value;
+}
+
+
 void initializeClusters(int clusters) {
+	//select random wines as the centers 
 	for (int i = 0; i < clusters; i++) {
 		//Centroids of each cluster 
 		cluster_points.push_back(rand() % 1011 + 1);
 	}
+	//for test purposes 
+	cluster_points[1] = 20; 
 }
 
 void FeedData() {
 	vector<double> element;
 
 	//Test with i and j as 1 going to 10 for a small sample size for now 
-	for (int i = 1; i < 10; i++) {
-		for (int j = 1; j < 10; j++) { //Eventually, j needs to be j = i + 1 so that we don't fill up the entire matrix 
+	for (int i = 1; i < 50; i++) {
+		for (int j = 1; j < 50; j++) { //Eventually, j needs to be j = i + 1 so that we don't fill up the entire matrix 
 			element.push_back(JaccardDistance(i, j));
 		}
 		//distance_data is a vector of Jaccard's Distances between wines 
@@ -197,21 +250,27 @@ void FeedData() {
 }
 
 
-void FuzzyC(int clusters) //, string wines[1011][306])
+void FuzzyC(int clusters, int m_value) //, string wines[1011][306])
 {
 	//Element is a row of wine data 
 	vector<string> element;
-	for (int i = 0; i < 1011; i++) {
-		for (int j = 0; j < 306; j++) {
+	//copy wine data over - trimmed 
+	for (int i = 1; i < 1010; i++) {
+		for (int j = 1; j < 305; j++) {
 			element.push_back(wines[i][j]);
 		}
 		//wines_data is all of the rows with the columns from element 
 		wines_data.push_back(element);
 		element.clear();
 	}
-
-	FeedData();
+	//sets the m value for fuzzyness
+	m = m_value; 
+	//generate random clusters based on current points 
 	initializeClusters(clusters);
+	//find the membership value for each wine to each cluster 
+	initializeMembership(); 
+	//generate new cluster centers based on membership values 
+	generateCenters(); 
 }
 //END CHRIS'S FUNCTIONS 
 
@@ -310,7 +369,7 @@ void main() {
 		k = 2; 
 	//Call to start up Fuzzy C  
 	cout << "k value: " << k << endl; 
-	FuzzyC(k); 
+	FuzzyC(k, 2); 
 	
 
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
