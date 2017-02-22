@@ -53,18 +53,43 @@ void readFromFile() {
 				counter++;
 				if (counter == 5)
 				{
-					while (getline(stream, section, ','))
+					while (getline(stream, section, ','))			//start seperating out the attributes
 					{
-						if (section.at(0) == '|')
+						if (section.at(0) == '|')				//if the attributes section is finished
+						{
+							counter = 0;
+							stringstream stream2(section);
+							string section2;
+							while (counter<5) //run until the line is finished
+							{
+								getline(stream2, section2, '|');
+								if (counter == 0)
+								{
+									counter++;
+								}
+								else
+								{
+									wineReviews[i][j] = section2;
+									j++;
+									counter++;
+								}
+							}
 							break;
+						}
+						else
+						{
+							wineReviews[i][j] = section;
+							j++;
+						}
+					}
+					while (getline(stream, section, '|')) //if before the attributes
+					{
 						wineReviews[i][j] = section;
 						j++;
 					}
 					counter = 0;
-					getline(stream, section, '|');
 				}
 			}
-			counter = 0;
 			j = 0;
 			i++;
 		}
