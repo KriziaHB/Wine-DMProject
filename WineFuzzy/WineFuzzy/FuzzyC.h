@@ -20,5 +20,6 @@ public:
 	double CalculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
 	void generateCenters();
+	
 };
 

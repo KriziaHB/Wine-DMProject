@@ -9,7 +9,9 @@ using namespace std;
 
 FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 {
+	//Take number of clusters
 	this->clusters = clusters;
+	//Copy Wine Data Over - Trimmed
 	vector<string> element;
 	for (int i = 1; i < 1010; i++) {
 		for (int j = 1; j < 305; j++) {
@@ -18,10 +20,13 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 		wines_data.push_back(element);
 		element.clear();
 	}
+	//Sets the m value for fuzzyness
 	m = m_value;
-	FeedData();
+	//Generate random clusters based on current points
 	initializeClusters();
+	//Find the membership value for each wine to each cluster
 	initializeMembership();
+	//Generate new cluster centers based on membership values
 	generateCenters();
 }
 
@@ -49,6 +54,7 @@ double FuzzyC::JaccardDistance(int x1, int x2) {
 }
 
 void FuzzyC::initializeClusters() {
+	//Select random wines as the centers
 	for (int i = 0; i < clusters; i++) {
 		cluster_points.push_back(rand() % 1010 + 1);
 	}
@@ -57,13 +63,16 @@ void FuzzyC::initializeClusters() {
 }
 
 vector<vector<double>> FuzzyC::initializeMembership() {
-	vector<double> element;
+	//Generate Jaccard's distance
+	FeedData();
+	//Clear old membership data (This is for calculating new values)
 	membership_data.clear();
+	vector<double> element;
 	for (int i = 0; i < distance_data.size(); i++) {
 		for (int j = 0; j < cluster_points.size(); j++) {
-			element.push_back(CalculateMembership(i, cluster_points[j]));
+			element.push_back(CalculateMembership(i, cluster_points[j])); //Calculate membership value for wine to each cluster point
 		}
-		membership_data.push_back(element);
+		membership_data.push_back(element);//Collect both cluster points for single wine and loop
 		element.clear();
 	}
 	return membership_data;
@@ -72,10 +81,10 @@ void FuzzyC::generateCenters() {
 	vector<string> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
 		for (int j = 0; j < 304; j++) {
-			element.push_back(to_string(calculateCentroid(j, i)));
+			element.push_back(to_string(calculateCentroid(j, i)));//For each attribute calculate the centroid (or average of all points in attribute)
 		}
-		cluster_points[i] = wines_data.size();
-		wines_data.push_back(element);
+		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
+		wines_data.push_back(element); //Append new centroid to wine data
 		element.clear();
 	}
 }
@@ -94,6 +103,7 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 
 double FuzzyC::CalculateMembership(int wine, int cluster){
 	double value = 0;
+	//Check if current wine is in cluster
 	for (int i = 0; i < cluster_points.size(); i++) {
 		if (wine == cluster_points[i]) {
 			value = 1;
@@ -103,22 +113,20 @@ double FuzzyC::CalculateMembership(int wine, int cluster){
 	double distance_to_cluster = distance_data[wine].at(cluster);
 	double power_value = 2 / (m - 1);
 	for (int i = 0; i < cluster_points.size() ; i++) {
-		value += pow((distance_to_cluster / distance_data[wine].at(cluster_points[i])), power_value);
+		value += pow((distance_to_cluster / distance_data[wine].at(cluster_points[i])), power_value);//summation of all distance to cluster points
 	}
 	value = 1 / value;
 
 	return value;
 }
 vector<vector<double>> FuzzyC::FeedData() {
-
 	vector<double> element;
 	for (int i = 1; i < 50; i++) {
 		for (int j = 1; j < 50; j++) {
-			element.push_back(JaccardDistance(i, j));
+			element.push_back(JaccardDistance(i, j)); //Compare each wine to each other wine, find the distance
 		}
-		distance_data.push_back(element);
+		distance_data.push_back(element); //Store distance of each wine to wine index
 		element.clear();
 	}
 	return distance_data;
-
 }
