@@ -1,6 +1,6 @@
 //Krizia Houston Buck 
 //Fuzzy C-Means Clustering with Jaccard's Distance Formula 
-//02/21/2017 
+//02/22/2017 
 
 #include <iostream> 
 #include <iomanip> 
@@ -156,6 +156,12 @@ double JaccardDistance(int x1, int x2) {
 }
 */ 
 
+void sortClusteredWines() {
+	//Sort the clustered wines for use in the visual representation PGM 
+
+
+}
+
 
 void writePGM(const char *filename, int dim1, int dim2, int type) //KHB change to work with grayscale & 2D arrays 
 {
@@ -229,18 +235,6 @@ void main() {
 	//read in files to 2D arrays 
 	readFromFile();
 
-	/*
-	//Test Jaccard's 
-	double dist1 = JaccardDistance(1, 2); 
-	double dist2 = JaccardDistance(2, 3); 
-	cout << "Wine 1 vs Wine 2: " << dist1 << endl; 
-	cout << "Wine 2 vs Wine 3: " << dist2 << endl; 
-	double dist3 = JaccardDistance(3, 4);
-	double dist4 = JaccardDistance(4, 5);
-	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
-	cout << "Wine 4 vs Wine 5: " << dist4 << endl; */
-
-
 	//User defined k (number of clusters) 
 	int k; 
 	cout << "Please enter an integer value for the number of clusters 'k': "; 
@@ -253,11 +247,22 @@ void main() {
 	FuzzyC fuzzy(k, 2, wines);
 
 
+	//Test Jaccard's 
+	double dist1 = fuzzy.JaccardDistance(1, 2);
+	double dist2 = fuzzy.JaccardDistance(2, 3);
+	cout << "Wine 1 vs Wine 2: " << dist1 << endl;
+	cout << "Wine 2 vs Wine 3: " << dist2 << endl;
+	double dist3 = fuzzy.JaccardDistance(3, 4);
+	double dist4 = fuzzy.JaccardDistance(4, 5);
+	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
+	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
+
+
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306, 1);
 
 	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
-
+	sortClusteredWines(); 
 	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306, 2); 
 
 	//Wait to terminate 
