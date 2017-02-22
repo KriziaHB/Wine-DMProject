@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string>
-
 using namespace std;
 
 
@@ -29,7 +28,6 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	//Generate new cluster centers based on membership values
 	generateCenters();
 }
-
 
 FuzzyC::~FuzzyC()
 {
@@ -77,6 +75,7 @@ vector<vector<double>> FuzzyC::initializeMembership() {
 	}
 	return membership_data;
 }
+
 void FuzzyC::generateCenters() {
 	vector<string> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
@@ -119,6 +118,7 @@ double FuzzyC::CalculateMembership(int wine, int cluster) {
 
 	return value;
 }
+
 vector<vector<double>> FuzzyC::FeedData() {
 	vector<double> element;
 	for (int i = 1; i < 50; i++) {
