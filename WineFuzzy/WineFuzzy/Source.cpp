@@ -16,6 +16,7 @@ using namespace std;
 
 string wineReviews[1011][50]; //Name, Vintage, Grade, Review, Author, Attributes 1 through n, Price, Country, Region, IssueDate 
 string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes 
+string sortedWines[1011][306]; //KHB: use for printing out the final image after wines are reordered in their clusters 
 #define RGB_COMPONENT_COLOR 255
 
 
@@ -216,7 +217,7 @@ void FuzzyC(int clusters) //, string wines[1011][306])
 
 
 
-void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
+void writePGM(const char *filename, int dim1, int dim2, int type) //KHB change to work with grayscale & 2D arrays 
 {
 	FILE *fp;
 	//open file for output
@@ -234,23 +235,50 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 	// rgb component depth
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
 
-	//Write to file  
-	for (int row = 0; row < dim1; row++)
+	//Write from original wine data 
+	if (type == 1)
 	{
-		for (int col = 0; col < dim2; col++)
+		//Write to file  
+		for (int row = 0; row < dim1; row++)
 		{
-			int pix = 255; 
-			if ((row == 0) || (col == 0))
-				fputc(char(pix), fp); 
-			//Black (0) if has the attribute, white (255) if does not 
-			else if (wines[row][col] == "1") {
-				pix = 0; 
-				fputc(char(pix), fp); 
+			for (int col = 0; col < dim2; col++)
+			{
+				int pix = 255;
+				if ((row == 0) || (col == 0))
+					fputc(char(pix), fp);
+				//Black (0) if has the attribute, white (255) if does not 
+				else if (wines[row][col] == "1") {
+					pix = 0;
+					fputc(char(pix), fp);
+				}
+				else {
+					pix = RGB_COMPONENT_COLOR;
+					fputc(char(pix), fp);
+				}
 			}
-			else {
-				pix = RGB_COMPONENT_COLOR;
-				fputc(char(pix), fp); 
-			} 
+		}
+	}
+	//Write from newly sorted and clustered wine data 
+	else
+	{
+		//Write to file  
+		for (int row = 0; row < dim1; row++)
+		{
+			for (int col = 0; col < dim2; col++)
+			{
+				int pix = 255;
+				if ((row == 0) || (col == 0))
+					fputc(char(pix), fp);
+				//Black (0) if has the attribute, white (255) if does not 
+				else if (sortedWines[row][col] == "1") {
+					pix = 0;
+					fputc(char(pix), fp);
+				}
+				else {
+					pix = RGB_COMPONENT_COLOR;
+					fputc(char(pix), fp);
+				}
+			}
 		}
 	}
 	fclose(fp);
@@ -286,11 +314,11 @@ void main() {
 	
 
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
-	writePGM("../res/WINEmatrix.pgm", 1011, 306);
+	writePGM("../res/WINEmatrix.pgm", 1011, 306, 1);
 
 	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
 
-	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306); 
+	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306, 2); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
