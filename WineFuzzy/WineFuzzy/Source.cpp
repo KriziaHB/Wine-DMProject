@@ -263,7 +263,9 @@ void main() {
 
 	//Reorder wine matrix to show the clusters better then write visual representation after row reordering
 	sortClusteredWines(); 
-	writePGM("../res/CLUSTERmatrix.pgm", 1011, 306, 2); 
+	char filename[30]; 
+	sprintf_s(filename, "../res/CLUSTERmatrix%d.pgm", k); 
+	writePGM(filename, 1011, 306, 2); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
