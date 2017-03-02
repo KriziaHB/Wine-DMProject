@@ -32,6 +32,8 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 		initializeMembership(i); 
 //		generateCenters(i); 
 	}
+	//break point for end of complete run for testing purposes 
+	int b = 1; 
 
 	//Generate new cluster centers based on membership values
 //	generateCenters();
@@ -98,6 +100,7 @@ vector<double> FuzzyC::initializeMembership(int row) {
 
 void FuzzyC::generateCenters() { 
 	vector<double> element;
+	cluster_centroids.clear(); 
 	for (int i = 0; i < cluster_points.size(); i++) {
 				//KHB	int i = row; 
 		for (int j = 0; j < 304; j++) {
