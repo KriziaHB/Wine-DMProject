@@ -28,7 +28,7 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 
 
 	//each wine membership then calculate centroid separately 
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 1010; i++) {
 		initializeMembership(i); 
 //		generateCenters(i); 
 	}
@@ -67,7 +67,7 @@ void FuzzyC::initializeClusters() {
 		cluster_points.push_back(rand() % 1010 + 1);
 	}
 	//for test purposes
-	cluster_points[1] = 20;
+//	cluster_points[1] = 20;
 }
 
 vector<double> FuzzyC::initializeMembership(int row) {
@@ -125,7 +125,7 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 	double numerator = 0.0;
 	double denominator = 0.0;
 	double centroid = 0.0;
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 1010; i++) {
 		//adjusted membership_data
 		//KHB zero check 
 		double num1 = membership_data.at(cluster);
@@ -173,8 +173,8 @@ double FuzzyC::CalculateMembership(int wine, int cluster) {
 
 vector<vector<double>> FuzzyC::FeedData() {
 	vector<double> element;
-	for (int i = 1; i < 50; i++) {
-		for (int j = 1; j < 50; j++) {
+	for (int i = 1; i < 1010; i++) {
+		for (int j = 1; j < 1010; j++) {
 			element.push_back(JaccardDistance(i, j)); //Compare each wine to each other wine, find the distance
 		}
 		distance_data.push_back(element); //Store distance of each wine to wine index
@@ -190,7 +190,7 @@ vector<vector<double>> FuzzyC::FeedData() {
 void FuzzyC::Manhattan(int c) {
 	manDists.clear(); 
 	double element = 0.0; 
-	for (int i = 0; i < 50; i++) { //iterate through each test wine
+	for (int i = 0; i < 1010; i++) { //iterate through each test wine
 		for (int attr = 0; attr < 304; attr++) { //iterate through attributes
 			int val = 0; 
 			if (wines_data[i].at(attr) == "1")					
