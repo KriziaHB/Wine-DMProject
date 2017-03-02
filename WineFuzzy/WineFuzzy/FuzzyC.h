@@ -9,7 +9,8 @@ private:
 	vector<int> cluster_points; //Real wines as initial centroids 
 	vector<vector<double>> distance_data; // distance matrix 
 	vector<vector<string>> wines_data; // copied 2D vector of wines and their attributes 
-	vector<vector<double>> membership_data; // percentages each index (wine) belongs to each cluster (column) 
+	//KHB changed to single vector 
+	vector<double> membership_data; // percentages each index (wine) belongs to each cluster (column) 
 	vector<vector<double>> cluster_centroids; //KHB centroids per cluster 
 	vector<double> manDists; //KHB distances derived from Manhattan calculation 
 public:
@@ -18,7 +19,7 @@ public:
 	void initializeClusters();
 	double JaccardDistance(int x1, int x2);
 	vector<vector<double>> FeedData();
-	vector<vector<double>> initializeMembership(int row);
+	vector<double> initializeMembership(int row); //KHB changed return type 
 	double CalculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
 	void generateCenters(int row);

@@ -68,7 +68,7 @@ void FuzzyC::initializeClusters() {
 	cluster_points[1] = 20;
 }
 
-vector<vector<double>> FuzzyC::initializeMembership(int row) {
+vector<double> FuzzyC::initializeMembership(int row) {
 	//Generate Jaccard's distance
 	FeedData();
 	//Clear old membership data (This is for calculating new values)
@@ -86,15 +86,15 @@ vector<vector<double>> FuzzyC::initializeMembership(int row) {
 
 	//KHB
 	for (int j = 0; j < clusters; j++) {
-		element.push_back(CalculateMembership(row, j)); //Calculate membership value for wine to each cluster point
+		membership_data.push_back(CalculateMembership(row, j)); //Calculate membership value for wine to each cluster point
 	}
-	membership_data.push_back(element);//Collect both cluster points for single wine and loop
-	element.clear();
+//	membership_data.push_back(element);//Collect both cluster points for single wine and loop
+//	element.clear();
 
 	return membership_data; //For one row / wine at a time 
 }
 
-void FuzzyC::generateCenters(int row) { //85 & 86 ? KHB
+void FuzzyC::generateCenters(int row) { 
 	vector<double> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
 				//KHB	int i = row; 
@@ -121,8 +121,9 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 	double denominator = 0;
 	double centroid = 0;
 	for (int i = 0; i < distance_data.size(); i++) {
-		numerator += pow(membership_data[i].at(cluster), m) * stod(wines_data[i].at(col));
-		denominator += pow(membership_data[i].at(cluster), m);
+		//adjusted membership_data
+		numerator += pow(membership_data.at(cluster), m) * stod(wines_data[i].at(col));
+		denominator += pow(membership_data[cluster], m);
 	}
 	centroid = numerator / denominator;
 	return centroid;
@@ -167,7 +168,7 @@ void FuzzyC::Manhattan(int c) {
 	manDists.clear(); 
 	double element = 0.0; 
 	for (int i = 0; i < 50; i++) { //iterate through each test wine
-		for (int attr = 0; attr < 305; attr++) { //iterate through attributes
+		for (int attr = 0; attr < 304; attr++) { //iterate through attributes
 			int val = 0; 
 			if (wines_data[i].at(attr) == "1")					
 				val = 1; 
