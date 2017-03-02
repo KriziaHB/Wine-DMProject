@@ -24,9 +24,17 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	//Generate random clusters based on current points
 	initializeClusters();
 	//Find the membership value for each wine to each cluster
-	initializeMembership();
+//	initializeMembership();
+
+
+	//each wine membership then calculate centroid separately 
+	for (int i = 0; i < 50; i++) {
+		initializeMembership(i); 
+		generateCenters(i); 
+	}
+
 	//Generate new cluster centers based on membership values
-	generateCenters();
+//	generateCenters();
 }
 
 FuzzyC::~FuzzyC()
@@ -60,13 +68,13 @@ void FuzzyC::initializeClusters() {
 	cluster_points[1] = 20;
 }
 
-vector<vector<double>> FuzzyC::initializeMembership() {
+vector<vector<double>> FuzzyC::initializeMembership(int row) {
 	//Generate Jaccard's distance
 	FeedData();
 	//Clear old membership data (This is for calculating new values)
 	membership_data.clear();
 	vector<double> element;
-	for (int i = 0; i < distance_data.size(); i++) {
+/*	for (int i = 0; i < distance_data.size(); i++) {
 		for (int j = 0; j < cluster_points.size(); j++) {
 			element.push_back(CalculateMembership(i, cluster_points[j])); //Calculate membership value for wine to each cluster point
 		}
@@ -74,18 +82,36 @@ vector<vector<double>> FuzzyC::initializeMembership() {
 		element.clear();
 	}
 	return membership_data;
+	*/
+
+	//KHB
+	for (int j = 0; j < clusters; j++) {
+		element.push_back(CalculateMembership(row, j)); //Calculate membership value for wine to each cluster point
+	}
+	membership_data.push_back(element);//Collect both cluster points for single wine and loop
+	element.clear();
+
+	return membership_data; //For one row / wine at a time 
 }
 
-void FuzzyC::generateCenters() { //85 & 86 ? KHB
-	vector<string> element;
+void FuzzyC::generateCenters(int row) { //85 & 86 ? KHB
+	vector<double> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
+				//KHB	int i = row; 
 		for (int j = 0; j < 304; j++) {
-			element.push_back(to_string(calculateCentroid(j, i)));//For each attribute calculate the centroid (or average of all points in attribute)
+//			element.push_back(to_string(calculateCentroid(j, i)));//For each attribute calculate the centroid (or average of all points in attribute)
+			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
 		}
-		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
-		wines_data.push_back(element); //Append new centroid to wine data
+//		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
+//		wines_data.push_back(element); //Append new centroid to wine data
+
+		//append new centroid data as doubles for now 
+		cluster_centroids.push_back(element); 
 		element.clear();
 	}
+
+	//Use generated centroid info to find closest actual wine and replace as medoid 
+	Manhattan(); 
 }
 
 double FuzzyC::calculateCentroid(int col, int cluster) {
@@ -103,7 +129,7 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 double FuzzyC::CalculateMembership(int wine, int cluster) {
 	double value = 0;
 	//Check if current wine is in cluster
-	for (int i = 0; i < cluster_points.size(); i++) {
+	for (int i = 0; i < clusters; i++) {
 		if (wine == cluster_points[i]) {
 			value = 1;
 			return value;
@@ -132,3 +158,10 @@ vector<vector<double>> FuzzyC::FeedData() {
 }
 
 
+
+//KHB - use generated centroids to find closest real wine and 
+//		replace cluster_points indices with new found closest real wine medoids 
+void FuzzyC::Manhattan() {
+
+
+}

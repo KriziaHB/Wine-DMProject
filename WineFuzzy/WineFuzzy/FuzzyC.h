@@ -17,9 +17,10 @@ public:
 	void initializeClusters();
 	double JaccardDistance(int x1, int x2);
 	vector<vector<double>> FeedData();
-	vector<vector<double>> initializeMembership();
+	vector<vector<double>> initializeMembership(int row);
 	double CalculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
-	void generateCenters();
+	void generateCenters(int row);
+	void Manhattan(); 
 
 };
