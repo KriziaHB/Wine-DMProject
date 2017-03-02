@@ -248,12 +248,12 @@ void main() {
 
 
 	//Test Jaccard's 
-	double dist1 = fuzzy.JaccardDistance(1, 2);
-	double dist2 = fuzzy.JaccardDistance(2, 3);
+	double dist1 = fuzzy.jaccardDistance(1, 2);
+	double dist2 = fuzzy.jaccardDistance(2, 3);
 	cout << "Wine 1 vs Wine 2: " << dist1 << endl;
 	cout << "Wine 2 vs Wine 3: " << dist2 << endl;
-	double dist3 = fuzzy.JaccardDistance(3, 4);
-	double dist4 = fuzzy.JaccardDistance(4, 5);
+	double dist3 = fuzzy.jaccardDistance(3, 4);
+	double dist4 = fuzzy.jaccardDistance(4, 5);
 	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 

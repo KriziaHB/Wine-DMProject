@@ -4,6 +4,7 @@ using namespace std;
 class FuzzyC
 {
 private:
+	const int INITIAL_SIZE = 1010;
 	int clusters;
 	int m;
 	vector<int> cluster_points;
@@ -14,10 +15,10 @@ public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();
 	void initializeClusters();
-	double JaccardDistance(int x1, int x2);
-	vector<vector<double>> FeedData();
+	double jaccardDistance(int x1, int x2);
+	vector<vector<double>> calculateDistance();
 	vector<vector<double>> initializeMembership();
-	double CalculateMembership(int wine, int cluster);
+	double calculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
 	void generateCenters();
 

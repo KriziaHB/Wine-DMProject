@@ -33,7 +33,7 @@ FuzzyC::~FuzzyC()
 {
 }
 
-double FuzzyC::JaccardDistance(int x1, int x2) {
+double FuzzyC::jaccardDistance(int x1, int x2) {
 	double a = 0.0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
 	double b = 0.0; //# of attributes where A and B have value of 1 
 	double dist = 0.0;
@@ -60,13 +60,13 @@ void FuzzyC::initializeClusters() {
 
 vector<vector<double>> FuzzyC::initializeMembership() {
 	//Generate Jaccard's distance
-	FeedData();
+	calculateDistance();
 	//Clear old membership data (This is for calculating new values)
 	membership_data.clear();
 	vector<double> element;
 	for (int i = 0; i < distance_data.size(); i++) {
 		for (int j = 0; j < cluster_points.size(); j++) {
-			element.push_back(CalculateMembership(i, j)); //Calculate membership value for wine to each cluster point
+			element.push_back(calculateMembership(i, j)); //Calculate membership value for wine to each cluster point
 		}
 		membership_data.push_back(element);//Collect both cluster points for single wine and loop
 		element.clear();
@@ -98,7 +98,7 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 	return centroid;
 }
 
-double FuzzyC::CalculateMembership(int wine, int cluster) {
+double FuzzyC::calculateMembership(int wine, int cluster) {
 	double value = 0;
 	//Check if current wine is in cluster
 	for (int i = 0; i < cluster_points.size(); i++) {
@@ -117,11 +117,12 @@ double FuzzyC::CalculateMembership(int wine, int cluster) {
 	return value;
 }
 
-vector<vector<double>> FuzzyC::FeedData() {
+vector<vector<double>> FuzzyC::calculateDistance() {
+	distance_data.clear();
 	vector<double> element;
-	for (int i = 0; i < wines_data.size(); i++) {
+	for (int i = 0; i < INITIAL_SIZE; i++) {
 		for (int j = 0; j < cluster_points.size(); j++) {
-			element.push_back(JaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
+			element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
 		}
 		distance_data.push_back(element); //Store distance of each wine to wine index
 		element.clear();
