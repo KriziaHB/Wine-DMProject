@@ -30,7 +30,7 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	//each wine membership then calculate centroid separately 
 	for (int i = 0; i < 50; i++) {
 		initializeMembership(i); 
-		generateCenters(i); 
+//		generateCenters(i); 
 	}
 
 	//Generate new cluster centers based on membership values
@@ -91,10 +91,12 @@ vector<double> FuzzyC::initializeMembership(int row) {
 //	membership_data.push_back(element);//Collect both cluster points for single wine and loop
 //	element.clear();
 
+
+	generateCenters();
 	return membership_data; //For one row / wine at a time 
 }
 
-void FuzzyC::generateCenters(int row) { 
+void FuzzyC::generateCenters() { 
 	vector<double> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
 				//KHB	int i = row; 
@@ -117,14 +119,25 @@ void FuzzyC::generateCenters(int row) {
 }
 
 double FuzzyC::calculateCentroid(int col, int cluster) {
-	double numerator = 0;
-	double denominator = 0;
-	double centroid = 0;
-	for (int i = 0; i < distance_data.size(); i++) {
+	double numerator = 0.0;
+	double denominator = 0.0;
+	double centroid = 0.0;
+	for (int i = 0; i < 50; i++) {
 		//adjusted membership_data
-		numerator += pow(membership_data.at(cluster), m) * stod(wines_data[i].at(col));
-		denominator += pow(membership_data[cluster], m);
+		//KHB zero check 
+		double num1 = membership_data.at(cluster);
+		if (num1 == 0)
+			numerator += 0.0; 
+		else 
+			numerator += double(pow(num1, m)) * stod(wines_data[i].at(col));
+		double den1 = membership_data[cluster]; 
+		if (den1 == 0)
+			denominator += 0.0; 
+		else 
+			denominator += double(pow(den1, m));
 	}
+	if (denominator == 0)
+		return 0; 
 	centroid = numerator / denominator;
 	return centroid;
 }
@@ -141,11 +154,18 @@ double FuzzyC::CalculateMembership(int wine, int cluster) {
 	double distance_to_cluster = distance_data[wine].at(cluster);
 	double power_value = 2 / (m - 1);
 	for (int i = 0; i < cluster_points.size(); i++) {
-		value += pow((distance_to_cluster / distance_data[wine].at(cluster_points[i])), power_value);//summation of all distance to cluster points
+		//KHB zero check 
+		double dist = distance_to_cluster / distance_data[wine].at(cluster_points[i]); 
+		if (dist == 0)
+			value += 0; 
+		else 
+			value += pow(dist, power_value);//summation of all distance to cluster points
 	}
-	value = 1 / value;
-
-	return value;
+	//zero check 
+	if (value == 0)
+		return 0.0; 
+	else 
+		return (1 / value);
 }
 
 vector<vector<double>> FuzzyC::FeedData() {

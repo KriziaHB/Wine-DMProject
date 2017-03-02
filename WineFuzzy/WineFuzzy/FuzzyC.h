@@ -22,7 +22,7 @@ public:
 	vector<double> initializeMembership(int row); //KHB changed return type 
 	double CalculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
-	void generateCenters(int row);
+	void generateCenters();
 	void Manhattan(int c);
 	int minimumDistance(); 
 
