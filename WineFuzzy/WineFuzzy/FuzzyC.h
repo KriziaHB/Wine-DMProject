@@ -4,12 +4,13 @@ using namespace std;
 class FuzzyC
 {
 private:
-	int clusters;
+	int clusters; // k 
 	int m;
-	vector<int> cluster_points;
-	vector<vector<double>> distance_data;
-	vector<vector<string>> wines_data;
-	vector<vector<double>> membership_data;
+	vector<int> cluster_points; //Real wines as initial centroids 
+	vector<vector<double>> distance_data; // distance matrix 
+	vector<vector<string>> wines_data; // copied 2D vector of wines and their attributes 
+	vector<vector<double>> membership_data; // percentages each index (wine) belongs to each cluster (column) 
+	vector<vector<double>> cluster_centroids; //KHB centroids per cluster 
 public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();

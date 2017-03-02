@@ -76,7 +76,7 @@ vector<vector<double>> FuzzyC::initializeMembership() {
 	return membership_data;
 }
 
-void FuzzyC::generateCenters() {
+void FuzzyC::generateCenters() { //85 & 86 ? KHB
 	vector<string> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
 		for (int j = 0; j < 304; j++) {
@@ -130,3 +130,5 @@ vector<vector<double>> FuzzyC::FeedData() {
 	}
 	return distance_data;
 }
+
+
