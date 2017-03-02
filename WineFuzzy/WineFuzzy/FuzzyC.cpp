@@ -111,7 +111,9 @@ void FuzzyC::generateCenters(int row) { //85 & 86 ? KHB
 	}
 
 	//Use generated centroid info to find closest actual wine and replace as medoid 
-	Manhattan(); 
+	for (int i = 0; i < clusters; i++) {
+		Manhattan(i);
+	}
 }
 
 double FuzzyC::calculateCentroid(int col, int cluster) {
@@ -161,7 +163,34 @@ vector<vector<double>> FuzzyC::FeedData() {
 
 //KHB - use generated centroids to find closest real wine and 
 //		replace cluster_points indices with new found closest real wine medoids 
-void FuzzyC::Manhattan() {
+void FuzzyC::Manhattan(int c) {
+	manDists.clear(); 
+	double element = 0.0; 
+	for (int i = 0; i < 50; i++) { //iterate through each test wine
+		for (int attr = 0; attr < 305; attr++) { //iterate through attributes
+			int val = 0; 
+			if (wines_data[i].at(attr) == "1")					
+				val = 1; 
 
-
+			//add up absolute values of distance at each attribute 
+			element += abs(cluster_centroids[c].at(i) - val);
+		}
+		//all attribute distances at each wine 
+		manDists.push_back(element);
+		element = 0.0; 
+	}
+	// cluster's medoid is now a real wine as selected from shortest distance to generated centroid  
+	cluster_points[c] = minimumDistance();
+}
+//KHB - return index of wine shortest distance from generated centroid 
+int FuzzyC::minimumDistance() {
+	int min = manDists.at(0);
+	int index = 0; 
+	for (int i = 1; i < manDists.size(); i++) {
+		if (manDists.at(i) < min) {
+			min = manDists.at(i); 
+			index = i; 
+		} 
+	}
+	return (index); 
 }
