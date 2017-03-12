@@ -61,6 +61,7 @@ void FuzzyC::initializeClusters() {
 vector<vector<double>> FuzzyC::initializeMembership() {
 	//Generate Jaccard's distance
 	calculateDistance();
+	calculateThreshold();
 	//Clear old membership data (This is for calculating new values)
 	membership_data.clear();
 	vector<double> element;
@@ -77,7 +78,7 @@ vector<vector<double>> FuzzyC::initializeMembership() {
 void FuzzyC::generateCenters() {
 	vector<string> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
-		for (int j = 0; j < 304; j++) {
+		for (int j = 0; j < INITIAL_COL; j++) {
 			element.push_back(to_string(calculateCentroid(j, i)));//For each attribute calculate the centroid (or average of all points in attribute)
 		}
 		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
@@ -95,6 +96,8 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 		denominator += pow(membership_data[i].at(cluster), m);
 	}
 	centroid = numerator / denominator;
+	//Round the centroid up or down based on whether it meets the threshold requirement
+	centroid = roundCentroid(col, centroid);
 	return centroid;
 }
 
@@ -120,7 +123,7 @@ double FuzzyC::calculateMembership(int wine, int cluster) {
 vector<vector<double>> FuzzyC::calculateDistance() {
 	distance_data.clear();
 	vector<double> element;
-	for (int i = 0; i < INITIAL_SIZE; i++) {
+	for (int i = 0; i < INITIAL_ROW; i++) {
 		for (int j = 0; j < cluster_points.size(); j++) {
 			element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
 		}
@@ -128,4 +131,27 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 		element.clear();
 	}
 	return distance_data;
+}
+
+vector<double> FuzzyC::calculateThreshold() {
+	threshold.clear();
+	double buffer;
+	//Find the average of each data's attribute and return into a vector
+	for (int i = 0; i < INITIAL_COL; i++) {
+		buffer = 0;
+		for (int j = 0; j < INITIAL_ROW; j++) {
+			buffer += stod(wines_data[j][i]);
+		}
+		threshold.push_back(buffer / INITIAL_ROW);
+	}
+	return threshold;
+}
+double FuzzyC::roundCentroid(int col, double centroid) {
+	//check if centroid meets threshold requirement
+	if (centroid >= threshold[col]) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
 }
