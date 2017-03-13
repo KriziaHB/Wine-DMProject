@@ -27,6 +27,8 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	initializeMembership();
 	//Generate new cluster centers based on membership values
 	generateCenters();
+	//Check to see if Algorithm is ready to terminate
+	checkTermination();
 }
 
 FuzzyC::~FuzzyC()
@@ -154,4 +156,22 @@ double FuzzyC::roundCentroid(int col, double centroid) {
 	else {
 		return 0;
 	}
+}
+bool FuzzyC::checkTermination() {
+	double max = 0;
+	for (int i = 0; i < cluster_points.size(); i++) {
+		for (int j = membership_data.size() - 1; j > 1; j--) {
+			if (calculateConvergence(i, j) > max) {
+				max = calculateConvergence(i, j);
+			}
+		}
+		if (max < termination_criterion) {
+			return false;
+		}
+	}
+	return true;
+}
+double FuzzyC::calculateConvergence(int cluster, int wine) {
+	double buffer = abs(membership_data[wine][cluster] - membership_data[wine - 1][cluster]);
+	return buffer;
 }

@@ -8,6 +8,7 @@ private:
 	const int INITIAL_ROW = 1010;
 	int clusters;
 	int m;
+	double termination_criterion = 0.5;
 	vector<double> threshold;
 	vector<int> cluster_points;
 	vector<vector<double>> distance_data;
@@ -17,6 +18,7 @@ public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();
 	void initializeClusters();
+	bool checkTermination();
 	double jaccardDistance(int x1, int x2);
 	vector<double> calculateThreshold();
 	vector<vector<double>> calculateDistance();
@@ -24,6 +26,7 @@ public:
 	double calculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
 	double roundCentroid(int col, double centroid);
+	double calculateConvergence(int cluster, int wine);
 	void generateCenters();
 
 };
