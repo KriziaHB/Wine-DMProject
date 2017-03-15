@@ -12,8 +12,9 @@ private:
 	vector<double> threshold;
 	vector<int> cluster_points;
 	vector<vector<double>> distance_data;
-	vector<vector<string>> wines_data;
+	vector<vector<double>> wines_data;
 	vector<vector<double>> membership_data;
+	vector<vector<double>> prev_membership_data;
 public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();
@@ -23,6 +24,7 @@ public:
 	vector<double> calculateThreshold();
 	vector<vector<double>> calculateDistance();
 	vector<vector<double>> initializeMembership();
+	vector<vector<double>> storeIteration();
 	double calculateMembership(int wine, int cluster);
 	double calculateCentroid(int col, int cluster);
 	double roundCentroid(int col, double centroid);
