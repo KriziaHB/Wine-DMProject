@@ -31,15 +31,14 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	do {
 		initializeMembership();
 		generateCenters();
-	} while (checkTermination());
+	} while (checkTermination());//Perform algorithm until convergence
 	printf("Done");
-	//Check to see if Algorithm is ready to terminate
 }
 
 FuzzyC::~FuzzyC()
 {
 }
-
+//Calculate distance from each wine to each centroid
 double FuzzyC::jaccardDistance(int x1, int x2) {
 	double a = 0.0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
 	double b = 0.0; //# of attributes where A and B have value of 1 
@@ -57,18 +56,19 @@ double FuzzyC::jaccardDistance(int x1, int x2) {
 	dist = double(a / (a + b));
 	return(dist);
 }
-
+//Select random wines as the centers for first iteration
 void FuzzyC::initializeClusters() {
-	//Select random wines as the centers
 	for (int i = 0; i < clusters; i++) {
 		cluster_points.push_back(rand() % wines_data.size());
 	}
 }
-
+//Generate Membership % to each centroid
 vector<vector<double>> FuzzyC::initializeMembership() {
 	//Generate Jaccard's distance
 	calculateDistance();
+	//Calculate the threshold for 1/0 cutoff for centroids
 	calculateThreshold();
+	//Store the previous iteration of membership_data for convergence calculations in checkTermination()
 	storeIteration();
 	//Clear old membership data (This is for calculating new values)
 	membership_data.clear();
@@ -82,7 +82,7 @@ vector<vector<double>> FuzzyC::initializeMembership() {
 	}
 	return membership_data;
 }
-
+//Append new centroids to wines_data for ease of calculation
 void FuzzyC::generateCenters() {
 	vector<double> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
@@ -94,7 +94,7 @@ void FuzzyC::generateCenters() {
 		element.clear();
 	}
 }
-
+//Calculate the new centroid based on Fuzzy C algorithm for each attribute
 double FuzzyC::calculateCentroid(int col, int cluster) {
 	double numerator = 0;
 	double denominator = 0;
@@ -108,7 +108,7 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 	centroid = roundCentroid(col, centroid);
 	return centroid;
 }
-
+//Find the membership value to the centroid using Fuzzy C Means with Jaccard's distance
 double FuzzyC::calculateMembership(int wine, int cluster) {
 	double value = 0;
 	//Check if current wine is in cluster
@@ -127,7 +127,7 @@ double FuzzyC::calculateMembership(int wine, int cluster) {
 
 	return value;
 }
-
+//Find the distance of each point to the current centroid (Uses Jaccards Distance)
 vector<vector<double>> FuzzyC::calculateDistance() {
 	distance_data.clear();
 	vector<double> element;
@@ -140,7 +140,7 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 	}
 	return distance_data;
 }
-
+//Find the average of each attribute and store it in a vector
 vector<double> FuzzyC::calculateThreshold() {
 	threshold.clear();
 	double buffer;
@@ -154,6 +154,7 @@ vector<double> FuzzyC::calculateThreshold() {
 	}
 	return threshold;
 }
+//Round the centroid values (which are currently decimal) to hard 1/0 values based on threshold calculation
 double FuzzyC::roundCentroid(int col, double centroid) {
 	//check if centroid meets threshold requirement
 	if (centroid >= threshold[col]) {
@@ -163,6 +164,9 @@ double FuzzyC::roundCentroid(int col, double centroid) {
 		return 0;
 	}
 }
+//Check to see whether changes in membership values are changing enough
+//If there is little change there doesn't need to be another iteration
+//return false for do-while in constructor will shut off algorithm
 bool FuzzyC::checkTermination() {
 	double max = 0;
 	for (int i = 0; i < cluster_points.size(); i++) {
@@ -177,11 +181,12 @@ bool FuzzyC::checkTermination() {
 	}
 	return true;
 }
+//Check the current values of membership_data to the previous iterations for convergence calculations
 double FuzzyC::calculateConvergence(int cluster, int wine) {
 	double buffer = abs(membership_data[wine][cluster] - prev_membership_data[wine][cluster]);
 	return buffer;
 }
-
+//Store current iteration for future convergence calculations
 vector<vector<double>> FuzzyC::storeIteration() {
 	prev_membership_data.clear();
 	prev_membership_data = membership_data;
