@@ -238,13 +238,38 @@ double FuzzyC::tallyAttributes() {
 
 	return(avgTally); 
 }
-//Take average number of attributes and force a wine to match all attributes (if no wine then to match 2/3, 1/2, 1/3, 1/6, 1 attribute) 
-vector<double> FuzzyC::manhattan2(int col, vector<double> e)
-{
-	int min = avgAttributes; 
-	int match = 0; 
+//Take average number of attributes and force a wine to match all attributes (if no wine then to match -1  each iteration until 1 attribute matches) 
+//Return clone of existing wine to be appended to wines_data as centroid/medoid 
+vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
+{	
+	//iterate through starting from matching average number of attributes to 1
+	for (int min = avgAttributes; iter > 0; iter--)
+	{
+		for (int i = 0; i < INITIAL_COL; i++) {
+			//find the cluster the wine is most closely related to, if not the cluster being checked, then skip it 
+			double max = 0.0;
+			int c = 0;
+			for (int j = 0; j < clusters; j++) {
+				if (max < membership_data[i].at(j)) {
+					max = membership_data[i].at(j);
+					c = j;
+				}
+			}
+			//wine is most closely related to cluster being checked, perform tally up Manhattan version 
+			if (c == cluster) {
+				int tally = 0;
+				for (int r = 0; r < INITIAL_ROW; r++) {
+					//add up all ones if they are at the same position 
+					if (wines_data[i].at(r) == e[r])
+						tally += e[r];
+				}
+				//if hit minimum value, then return first found wine as medoid/centroid 
+				if (tally == min)
+					return (wines_data[i]);
+			}
+		}
+	}
 
-
-
-	return (wines_data[match]);
+	//If no wine found, return centroid from Manhattan Option #1 
+	return (e);
 }

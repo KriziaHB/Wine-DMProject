@@ -32,5 +32,5 @@ public:
 	double calculateConvergence(int cluster, int wine);
 	void generateCenters(); 
 	double tallyAttributes(); 
-	vector<double> manhattan2(int col, vector<double> e);
+	vector<double> manhattan2(int cluster, vector<double> e);
 };
