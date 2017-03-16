@@ -91,11 +91,30 @@ vector<vector<double>> FuzzyC::initializeMembership() {
 void FuzzyC::generateCenters() {
 	vector<double> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
-		for (int j = 0; j < INITIAL_COL; j++) {
-			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
-		}
+
+		//[KHB] COMMENT OUT WHEN using Option #2
+//		for (int j = 0; j < INITIAL_COL; j++) {
+//			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
+//		} //[KHB] end comment out 
+
 		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
-		wines_data.push_back(element); //Append new centroid to wine data
+
+		//[KHB] COMMENT OUT WHEN using Option #2
+//		wines_data.push_back(element); //Append new centroid to wine data
+		//[KHB] end comment out
+
+
+		//[KHB] COMMENT OUT WHEN using Option #1										   
+		//THIS IS OPTION #2 for Manhattan tally up 
+		for (int a = 0; a < INITIAL_COL; a++) {
+			//For each attribute calculate the centroid (or average of all points in attribute)
+			//Utilize rounding for tally 
+			element.push_back(calculateCentroid(a, i)); 
+		}
+		wines_data.push_back(manhattan2(i, element)); 
+		//[KHB] end Option #2
+
+		//KEEP 
 		element.clear();
 	}
 }
@@ -110,10 +129,9 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 	}
 	centroid = numerator / denominator;
 
-	//THIS IS OPTION #1 for rounding
 	//Round the centroid up or down based on whether it meets the threshold requirement
 	centroid = roundCentroid(col, centroid);
-	//THIS IS OPTION #2 for 
+
 	return centroid;
 }
 //Find the membership value to the centroid using Fuzzy C Means with Jaccard's distance
@@ -219,4 +237,14 @@ double FuzzyC::tallyAttributes() {
 	avgTally = totalTally / 1010;
 
 	return(avgTally); 
+}
+//Take average number of attributes and force a wine to match all attributes (if no wine then to match 2/3, 1/2, 1/3, 1/6, 1 attribute) 
+vector<double> FuzzyC::manhattan2(int col, vector<double> e)
+{
+	int min = avgAttributes; 
+	int match = 0; 
+
+
+
+	return (wines_data[match]);
 }
