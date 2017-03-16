@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string>
+#include <iostream> 
 using namespace std;
 
 
@@ -27,6 +28,10 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	initializeMembership();
 	//Generate new cluster centers based on membership values
 	generateCenters();
+
+	//[KHB] Find average number of attributes per wine for Manhattan Option #2 
+	avgAttributes = tallyAttributes(); 
+	cout << "Average number of attributes per wine: " << avgAttributes << endl; 
 
 	do {
 		initializeMembership();
@@ -104,8 +109,11 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 		denominator += pow(membership_data[i].at(cluster), m);
 	}
 	centroid = numerator / denominator;
+
+	//THIS IS OPTION #1 for rounding
 	//Round the centroid up or down based on whether it meets the threshold requirement
 	centroid = roundCentroid(col, centroid);
+	//THIS IS OPTION #2 for 
 	return centroid;
 }
 //Find the membership value to the centroid using Fuzzy C Means with Jaccard's distance
@@ -191,4 +199,24 @@ vector<vector<double>> FuzzyC::storeIteration() {
 	prev_membership_data.clear();
 	prev_membership_data = membership_data;
 	return prev_membership_data;
+}
+
+
+//[KHB] tally attributes of each wine and get the average to be used for OPTION #2 Manhattan 
+double FuzzyC::tallyAttributes() {
+
+	double avgTally = 0.0; 
+	int totalTally = 0; 
+
+	//Tally up all ones in data set then divide by number of wines to find average ones per wine 
+	for (int i = 0; i < 1011; i++) {
+		int tally = 0; 
+		for (int j = 0; j < 304; j++) { 
+			tally += wines_data[i].at(j); 
+		}
+		totalTally += tally; 
+	}
+	avgTally = totalTally / 1010;
+
+	return(avgTally); 
 }

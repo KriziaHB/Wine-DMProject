@@ -15,6 +15,7 @@ private:
 	vector<vector<double>> wines_data;
 	vector<vector<double>> membership_data;
 	vector<vector<double>> prev_membership_data;
+	double avgAttributes; 
 public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();
@@ -29,6 +30,7 @@ public:
 	double calculateCentroid(int col, int cluster);
 	double roundCentroid(int col, double centroid);
 	double calculateConvergence(int cluster, int wine);
-	void generateCenters();
+	void generateCenters(); 
+	double tallyAttributes(); 
 
 };
