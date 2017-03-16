@@ -93,17 +93,18 @@ void FuzzyC::generateCenters() {
 	for (int i = 0; i < cluster_points.size(); i++) {
 
 		//[KHB] COMMENT OUT WHEN using Option #2
-//		for (int j = 0; j < INITIAL_COL; j++) {
-//			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
-//		} //[KHB] end comment out 
+		for (int j = 0; j < INITIAL_COL; j++) {
+			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
+		} //[KHB] end comment out 
 
 		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
 
 		//[KHB] COMMENT OUT WHEN using Option #2
-//		wines_data.push_back(element); //Append new centroid to wine data
+		wines_data.push_back(element); //Append new centroid to wine data
 		//[KHB] end comment out
 
 
+		/*
 		//[KHB] COMMENT OUT WHEN using Option #1										   
 		//THIS IS OPTION #2 for Manhattan tally up 
 		for (int a = 0; a < INITIAL_COL; a++) {
@@ -113,6 +114,7 @@ void FuzzyC::generateCenters() {
 		}
 		wines_data.push_back(manhattan2(i, element)); 
 		//[KHB] end Option #2
+		*/
 
 		//KEEP 
 		element.clear();
