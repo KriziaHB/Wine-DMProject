@@ -27,6 +27,8 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	initializeMembership();
 	//Generate new cluster centers based on membership values
 	generateCenters();
+
+	int b = 0; 
 }
 
 FuzzyC::~FuzzyC()
