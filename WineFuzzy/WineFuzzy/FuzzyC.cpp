@@ -243,7 +243,7 @@ double FuzzyC::tallyAttributes() {
 vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 {	
 	//iterate through starting from matching average number of attributes to 1
-	for (int min = avgAttributes; iter > 0; iter--)
+	for (int min = avgAttributes; min > 0; min--)
 	{
 		for (int i = 0; i < INITIAL_COL; i++) {
 			//find the cluster the wine is most closely related to, if not the cluster being checked, then skip it 
