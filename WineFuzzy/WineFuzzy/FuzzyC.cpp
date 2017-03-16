@@ -245,7 +245,7 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 	//iterate through starting from matching average number of attributes to 1
 	for (int min = avgAttributes; min > 0; min--)
 	{
-		for (int i = 0; i < INITIAL_COL; i++) {
+		for (int i = 0; i < INITIAL_ROW; i++) {
 			//find the cluster the wine is most closely related to, if not the cluster being checked, then skip it 
 			double max = 0.0;
 			int c = 0;
@@ -258,10 +258,10 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 			//wine is most closely related to cluster being checked, perform tally up Manhattan version 
 			if (c == cluster) {
 				int tally = 0;
-				for (int r = 0; r < INITIAL_ROW; r++) {
+				for (int col = 0; col < INITIAL_COL; col++) {
 					//add up all ones if they are at the same position 
-					if (wines_data[i].at(r) == e[r])
-						tally += e[r];
+					if (wines_data[i].at(col) == e[col])
+						tally += e[col];
 				}
 				//if hit minimum value, then return first found wine as medoid/centroid 
 				if (tally == min)
