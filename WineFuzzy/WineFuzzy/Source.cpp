@@ -220,7 +220,7 @@ void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<do
 		for (int j = 0; j < dim2; j++) {
 			fp << ", " << membership[i].at(j); 
 		}
-		fp << "\n"; 
+		fp << " \n"; 
 	}
 
 	//close the text file 
