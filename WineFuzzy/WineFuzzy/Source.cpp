@@ -201,6 +201,33 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 }
 
 
+void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<double>> md) {
+	fstream fp;
+	//open file for output
+	fp.open(filename); 
+
+	//header 
+	fp << "Wines"; 
+	//Cluster numbers 
+	for (int i = 1; i <= dim2; i++) {
+		fp << ", " << i; 
+	}
+	fp << "\n"; 
+
+	//Membership data 
+	for (int i = 1; i <= dim1; i++) {
+		fp << "Wine " << i; 
+		for (int j = 0; j < dim2; j++) {
+			fp << ", " << md[i].at(j); 
+		}
+		fp << "\n"; 
+	}
+
+	//close the text file 
+	fp.close(); 
+}
+
+
 void main() {
 	//read in files to 2D arrays 
 	readFromFile();
@@ -228,9 +255,12 @@ void main() {
 	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
 */
 
+	//Gather membership data for printing to text file for SVM analysis 
+	vector<vector<double>> md = fuzzy.printMD();
+
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-
+	writeMemberships("../res/MembershipData.txt", 1011, k + 1, md); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";

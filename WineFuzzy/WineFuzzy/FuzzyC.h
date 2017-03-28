@@ -33,4 +33,5 @@ public:
 	void generateCenters(); 
 	double tallyAttributes(); 
 	vector<double> manhattan2(int cluster, vector<double> e);
+	vector<vector<double>> printMD(); 
 };

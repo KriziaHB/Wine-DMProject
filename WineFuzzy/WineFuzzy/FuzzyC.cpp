@@ -37,6 +37,7 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 		initializeMembership();
 		generateCenters();
 	} while (checkTermination());//Perform algorithm until convergence
+	
 	printf("Done");
 }
 
@@ -274,4 +275,8 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 
 	//If no wine found, return centroid from Manhattan Option #1 
 	return (e);
+}
+
+vector<vector<double>> FuzzyC::printMD() {
+	return(membership_data); 
 }
