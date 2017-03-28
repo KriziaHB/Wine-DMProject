@@ -201,7 +201,7 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 }
 
 
-void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<double>> md) {
+void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<double>> membership) {
 	fstream fp;
 	//open file for output
 	fp.open(filename); 
@@ -218,7 +218,7 @@ void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<do
 	for (int i = 1; i <= dim1; i++) {
 		fp << "Wine " << i; 
 		for (int j = 0; j < dim2; j++) {
-			fp << ", " << md[i].at(j); 
+			fp << ", " << membership[i].at(j); 
 		}
 		fp << "\n"; 
 	}
