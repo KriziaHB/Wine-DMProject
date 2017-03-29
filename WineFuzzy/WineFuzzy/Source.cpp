@@ -22,12 +22,8 @@ string wines[1011][306]; //KT: 11*26 + 20; Wine name then attributes
 
 void readFromFile() {
 	//full_data.txt & wines.csv
-	//C:/Users/buckkr/Source/Repos/Wine-DMProject
 	ifstream reviews("../res/full_data.txt", ios::in);
 	fstream wineCSV("../res/wines.csv", ios::in);
-	//KRIZIA 
-	//ifstream reviews("C:/Users/buckkr/Source/ReposWine-DMProject/full_data.txt", ios::in);
-	//fstream wineCSV("C:/Users/buckkr/Source/Repos/Wine-DMProject/wines.csv", ios::in);
 
 	//read to wineReviews[][] 
 	if (reviews.is_open()) {
@@ -113,18 +109,13 @@ void readFromFile() {
 					i++;
 					j = 0;
 					wines[i][j] = section; 
-//					cout << "wines[" << i << "][" << j << "]: " << wines[i][j] << ";" << endl;
 				}
 				else {
 					wines[i][j] = section;
-//					cout << "wines[" << i << "][" << j << "]: " << wines[i][j] << ";" << endl;
 					j++;
 				}
 			}
 		}
-//		cout << "i: " << i << endl;
-//		cout << "j: " << j << endl;
-//		cout << "Counter: " << counter << endl;
 
 		//Cleanup 
 		wineCSV.close();
@@ -132,29 +123,6 @@ void readFromFile() {
 	else
 		cout << "Unable to open the Wine excel file" << endl;
 }
-
-
-//Old Jaccard
-/*
-double JaccardDistance(int x1, int x2) {
-	double a = 0.0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
-	double b = 0.0; //# of attributes where A and B have value of 1 
-	double dist = 0.0;
-
-	// count up a (different values) and b (both have 1) between the two points 
-	for (int i = 1; i < 306; i++) {
-		if ((wines[x1][i] == "1") && (wines[x2][i] == "1"))
-			b++; 
-		else if (wines[x1][i] != wines[x2][i])
-			a++; 
-	}
-
-	//Formula: simplified by adding together both cases of 1 vs 0 when comparing wines 
-	dist = double(a / (a + b)); 
-	return(dist);
-}
-*/ 
-
 
 
 void writePGM(const char *filename, int dim1, int dim2) //KHB change to work with grayscale & 2D arrays 
