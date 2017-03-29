@@ -298,7 +298,7 @@ void FuzzyC::writeToFile() {
 
 	//open file for output
 	fstream fp; 
-	const char *filename = "../res/MembershipData%d.txt"; //SOMEHOW MAKE %d equal global MOD value 
+	const char *filename = "../res/MembershipData.txt"; //SOMEHOW MAKE %d equal global MOD value ("../res/MembershipData%d.txt", mod)
 	fp.open(filename); 
 
 	//header 
