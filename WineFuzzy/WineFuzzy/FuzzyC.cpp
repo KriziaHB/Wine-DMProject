@@ -294,11 +294,11 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 //[KHB] write to file in FuzzyC
 void FuzzyC::writeToFile() {
 	//Open file for each iteration of mod
-	ofstream output_file("./test.txt" + to_string(mod + 1) + ".txt");
+	ofstream output_file("../res/membershipdata_split" + to_string(mod + 1) + ".txt");
 	ostream_iterator<double> output_iterator(output_file, ", ");
 	//Write to file
 	for (int i = 0; i < membership_data.size(); i++) {
-		output_file << "Wine" + to_string(i + 1) + "\t";
+		output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + "\t";
 		copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
 		output_file << '\n';
 	}
@@ -306,9 +306,11 @@ void FuzzyC::writeToFile() {
 
 void FuzzyC::collapseData() {
 	collapsed_wines_data.clear();
+	collapsed_wines_previndex.clear();
 	for (int i = 0; i < wines_data.size(); i++) {
 		if (i % fold != mod) {
 			collapsed_wines_data.push_back(wines_data[i]);
+			collapsed_wines_previndex.push_back(i);
 		}
 	}
 	INITIAL_ROW = collapsed_wines_data.size();
