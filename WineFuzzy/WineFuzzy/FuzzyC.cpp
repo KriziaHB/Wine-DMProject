@@ -298,7 +298,7 @@ void FuzzyC::writeToFile() {
 
 	//open file for output
 	fstream fp; 
-	const char *filename = "../res/MembershipData.txt"; //SOMEHOW MAKE %d equal global MOD value ("../res/MembershipData%d.txt", mod)
+	const char *filename = "MembershipData.txt"; //SOMEHOW MAKE %d equal global MOD value ("../res/MembershipData%d.txt", mod)
 	fp.open(filename); 
 
 	//header 
@@ -310,7 +310,7 @@ void FuzzyC::writeToFile() {
 	fp << "\n";
 
 	//Membership data 
-	for (int i = 0; i < INITIAL_ROW; i++) {
+	for (int i = 0; i < membership_data.size(); i++) {
 		fp << "Wine " << i + 1;
 		for (int j = 0; j < clusters; j++) {
 			double value = membership_data[i][j];
