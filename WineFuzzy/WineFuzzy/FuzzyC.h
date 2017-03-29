@@ -16,6 +16,8 @@ private:
 	vector<vector<double>> membership_data;
 	vector<vector<double>> prev_membership_data;
 	double avgAttributes; 
+	int fold = 5; 
+	int mod = 0; 
 public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();

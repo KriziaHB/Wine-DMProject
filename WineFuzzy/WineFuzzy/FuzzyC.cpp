@@ -34,14 +34,21 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	avgAttributes = tallyAttributes(); 
 	cout << "Average number of attributes per wine: " << avgAttributes << endl; 
 
-	do {
-		initializeMembership();
-		generateCenters();
-	} while (checkTermination());//Perform algorithm until convergence
-	
-	//[KHB] write to file for SVM 
-	writeToFile("../res/MembershipData.txt"); 
 
+	//Five Fold testing, run 'FOLD' times with different folds being used and omitted 
+	for (int i = 0; i < fold; i++) {
+		do {
+			initializeMembership();
+			generateCenters();
+		} while (checkTermination());//Perform algorithm until convergence
+
+		//[KHB COME BACK] 
+		//[KHB] write to file for SVM 
+		writeToFile("../res/MembershipData.txt");
+
+		//reset/delete all vectors 
+		//[CHRIS COME BACK] 
+	}
 	printf("Done");
 }
 
