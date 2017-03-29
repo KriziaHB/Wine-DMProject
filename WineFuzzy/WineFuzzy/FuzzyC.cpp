@@ -44,11 +44,12 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 
 		//[KHB COME BACK] 
 		//[KHB] write to file for SVM 
-		writeToFile("../res/MembershipData.txt");
+//		writeToFile("../res/MembershipData.txt");
 
 		//reset/delete all vectors 
-		//[CHRIS COME BACK] 
+		mod++; 
 	}
+
 	printf("Done");
 }
 
@@ -172,11 +173,15 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 	distance_data.clear();
 	vector<double> element;
 	for (int i = 0; i < INITIAL_ROW; i++) {
-		for (int j = 0; j < cluster_points.size(); j++) {
-			element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
+
+		//skip one out of every "FOLD" (in our case 5) 
+		if (i % fold != mod) {
+			for (int j = 0; j < cluster_points.size(); j++) {
+				element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
+			}
+			distance_data.push_back(element); //Store distance of each wine to wine index
+			element.clear();
 		}
-		distance_data.push_back(element); //Store distance of each wine to wine index
-		element.clear();
 	}
 	return distance_data;
 }
