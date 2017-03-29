@@ -35,18 +35,17 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	cout << "Average number of attributes per wine: " << avgAttributes << endl; 
 
 
-	//Five Fold testing, run 'FOLD' times with different folds being used and omitted 
+	//[KHB] Five Fold testing, run 'FOLD' times with different folds being used and omitted 
 	for (int i = 0; i < fold; i++) {
 		do {
 			initializeMembership();
 			generateCenters();
 		} while (checkTermination());//Perform algorithm until convergence
 
-		//[KHB COME BACK] 
-		//[KHB] write to file for SVM 
-//		writeToFile("../res/MembershipData.txt");
+		//[KHB] write to file for SVM  
+		writeToFile();
 
-		//reset/delete all vectors 
+		//[KHB] move to next set of folds 
 		mod++; 
 	}
 
@@ -174,7 +173,7 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 	vector<double> element;
 	for (int i = 0; i < INITIAL_ROW; i++) {
 
-		//skip one out of every "FOLD" (in our case 5) 
+		//[KHB] skip one out of every "FOLD" (in our case 5) 
 		if (i % fold != mod) {
 			for (int j = 0; j < cluster_points.size(); j++) {
 				element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
@@ -293,16 +292,14 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 	return (e);
 }
 
-//[KHB] write to file in main 
-vector<vector<double>> FuzzyC::printMD() {
-	return(membership_data); 
-}
 
 //[KHB] write to file in FuzzyC
-void FuzzyC::writeToFile(const char *filename) {
-	fstream fp;
+void FuzzyC::writeToFile() {
+
 	//open file for output
-	fp.open(filename);
+	fstream fp; 
+	const char *filename = "../res/MembershipData%d.txt"; //SOMEHOW MAKE %d equal global MOD value 
+	fp.open(filename); 
 
 	//header 
 	fp << "Wines";
@@ -316,8 +313,8 @@ void FuzzyC::writeToFile(const char *filename) {
 	for (int i = 0; i < INITIAL_ROW; i++) {
 		fp << "Wine " << i + 1;
 		for (int j = 0; j < clusters; j++) {
-			fp << ", "; 
-			fp << membership_data[i][j];
+			double value = membership_data[i][j];
+			fp << ", " << value; 
 		}
 		fp << " \n";
 	}

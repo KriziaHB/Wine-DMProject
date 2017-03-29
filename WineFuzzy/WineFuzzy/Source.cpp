@@ -201,32 +201,6 @@ void writePGM(const char *filename, int dim1, int dim2) //KHB change to work wit
 }
 
 
-void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<double>> membership) {
-	fstream fp;
-	//open file for output
-	fp.open(filename); 
-
-	//header 
-	fp << "Wines"; 
-	//Cluster numbers 
-	for (int i = 1; i <= dim2; i++) {
-		fp << ", " << i; 
-	}
-	fp << "\n"; 
-
-	//Membership data 
-	for (int i = 0; i < dim1; i++) {
-		fp << "Wine " << i + 1; 
-		for (int j = 0; j < dim2; j++) {
-			fp << ", " << membership[i].at(j); 
-		}
-		fp << " \n"; 
-	}
-
-	//close the text file 
-	fp.close(); 
-}
-
 
 void main() {
 	//read in files to 2D arrays 
@@ -243,24 +217,8 @@ void main() {
 	cout << "k value: " << k << endl; 
 	FuzzyC fuzzy(k, 2, wines);
 
-/*
-	//Test Jaccard's 
-	double dist1 = fuzzy.jaccardDistance(1, 2);
-	double dist2 = fuzzy.jaccardDistance(2, 3);
-	cout << "Wine 1 vs Wine 2: " << dist1 << endl;
-	cout << "Wine 2 vs Wine 3: " << dist2 << endl;
-	double dist3 = fuzzy.jaccardDistance(3, 4);
-	double dist4 = fuzzy.jaccardDistance(4, 5);
-	cout << "Wine 3 vs Wine 4: " << dist3 << endl;
-	cout << "Wine 4 vs Wine 5: " << dist4 << endl;
-*/
-
-	//Gather membership data for printing to text file for SVM analysis 
-	vector<vector<double>> md = fuzzy.printMD();
-
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-//	writeMemberships("../res/MembershipData.txt", 1011, k, md); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
