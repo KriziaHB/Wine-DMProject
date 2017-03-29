@@ -4,6 +4,7 @@
 #include <math.h>
 #include <string>
 #include <iostream> 
+#include <fstream> 
 using namespace std;
 
 
@@ -38,6 +39,9 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 		generateCenters();
 	} while (checkTermination());//Perform algorithm until convergence
 	
+	//[KHB] write to file for SVM 
+	writeToFile("../res/MembershipData.txt"); 
+
 	printf("Done");
 }
 
@@ -277,6 +281,35 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 	return (e);
 }
 
+//[KHB] write to file in main 
 vector<vector<double>> FuzzyC::printMD() {
 	return(membership_data); 
+}
+
+//[KHB] write to file in FuzzyC
+void FuzzyC::writeToFile(const char *filename) {
+	fstream fp;
+	//open file for output
+	fp.open(filename);
+
+	//header 
+	fp << "Wines";
+	//Cluster numbers 
+	for (int i = 1; i <= clusters; i++) {
+		fp << ", " << i;
+	}
+	fp << "\n";
+
+	//Membership data 
+	for (int i = 0; i < INITIAL_ROW; i++) {
+		fp << "Wine " << i + 1;
+		for (int j = 0; j < clusters; j++) {
+			fp << ", "; 
+			fp << membership_data[i][j];
+		}
+		fp << " \n";
+	}
+
+	//close the text file 
+	fp.close();
 }

@@ -215,8 +215,8 @@ void writeMemberships(const char *filename, int dim1, int dim2, vector<vector<do
 	fp << "\n"; 
 
 	//Membership data 
-	for (int i = 1; i <= dim1; i++) {
-		fp << "Wine " << i; 
+	for (int i = 0; i < dim1; i++) {
+		fp << "Wine " << i + 1; 
 		for (int j = 0; j < dim2; j++) {
 			fp << ", " << membership[i].at(j); 
 		}
@@ -260,7 +260,7 @@ void main() {
 
 	//Visual representation of the original 2D array (matrix) of wines and their attributes 
 	writePGM("../res/WINEmatrix.pgm", 1011, 306);
-	writeMemberships("../res/MembershipData.txt", 1011, k + 1, md); 
+//	writeMemberships("../res/MembershipData.txt", 1011, k, md); 
 
 	//Wait to terminate 
 	cout << "Terminate the program";
