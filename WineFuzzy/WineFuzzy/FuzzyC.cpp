@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream> 
 #include <fstream> 
+#include <iterator>
 using namespace std;
 
 
@@ -23,20 +24,17 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	}
 	//Sets the m value for fuzzyness
 	m = m_value;
-	//Generate random clusters based on current points
-	initializeClusters();
-	//Find the membership value for each wine to each cluster
-	initializeMembership();
-	//Generate new cluster centers based on membership values
-	generateCenters();
-
-	//[KHB] Find average number of attributes per wine for Manhattan Option #2 
-	avgAttributes = tallyAttributes(); 
-	cout << "Average number of attributes per wine: " << avgAttributes << endl; 
-
 
 	//[KHB] Five Fold testing, run 'FOLD' times with different folds being used and omitted 
 	for (int i = 0; i < fold; i++) {
+		//Collapse Wines_Data based on modulus
+		collapseData();
+		//Generate random clusters based on current points
+		initializeClusters();
+		//Find the membership value for each wine to each cluster
+		initializeMembership();
+		//Generate new cluster centers based on membership values
+		generateCenters();
 		do {
 			initializeMembership();
 			generateCenters();
@@ -46,7 +44,7 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 		writeToFile();
 
 		//[KHB] move to next set of folds 
-		mod++; 
+ 		mod++; 
 	}
 
 	printf("Done");
@@ -63,9 +61,9 @@ double FuzzyC::jaccardDistance(int x1, int x2) {
 
 	// count up a (different values) and b (both have 1) between the two points 
 	for (int i = 0; i < 303; i++) {
-		if ((wines_data[x1].at(i) == 1) && (wines_data[x2].at(i) == 1))
+		if ((collapsed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
 			b++;
-		else if (wines_data[x1].at(i) != wines_data[x2].at(i))
+		else if (collapsed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
 			a++;
 	}
 
@@ -75,8 +73,9 @@ double FuzzyC::jaccardDistance(int x1, int x2) {
 }
 //Select random wines as the centers for first iteration
 void FuzzyC::initializeClusters() {
+	cluster_points.clear();
 	for (int i = 0; i < clusters; i++) {
-		cluster_points.push_back(rand() % wines_data.size());
+		cluster_points.push_back(rand() % collapsed_wines_data.size());
 	}
 }
 //Generate Membership % to each centroid
@@ -109,10 +108,10 @@ void FuzzyC::generateCenters() {
 			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
 		} //[KHB] end comment out 
 
-		cluster_points[i] = wines_data.size(); //Assign new index as the new cluster point
+		cluster_points[i] = collapsed_wines_data.size(); //Assign new index as the new cluster point
 
 		//[KHB] COMMENT OUT WHEN using Option #2
-		wines_data.push_back(element); //Append new centroid to wine data
+		collapsed_wines_data.push_back(element); //Append new centroid to wine data
 		//[KHB] end comment out
 
 
@@ -138,8 +137,11 @@ double FuzzyC::calculateCentroid(int col, int cluster) {
 	double denominator = 0;
 	double centroid = 0;
 	for (int i = 0; i < distance_data.size(); i++) {
-		numerator += pow(membership_data[i].at(cluster), m) * wines_data[i].at(col);
+		numerator += pow(membership_data[i].at(cluster), m) * (collapsed_wines_data[i].at(col));
 		denominator += pow(membership_data[i].at(cluster), m);
+		if (isnan(numerator)) {
+			break;
+		}
 	}
 	centroid = numerator / denominator;
 
@@ -172,15 +174,11 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 	distance_data.clear();
 	vector<double> element;
 	for (int i = 0; i < INITIAL_ROW; i++) {
-
-		//[KHB] skip one out of every "FOLD" (in our case 5) 
-		if (i % fold != mod) {
 			for (int j = 0; j < cluster_points.size(); j++) {
 				element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
 			}
 			distance_data.push_back(element); //Store distance of each wine to wine index
 			element.clear();
-		}
 	}
 	return distance_data;
 }
@@ -192,7 +190,7 @@ vector<double> FuzzyC::calculateThreshold() {
 	for (int i = 0; i < INITIAL_COL; i++) {
 		buffer = 0;
 		for (int j = 0; j < INITIAL_ROW; j++) {
-			buffer += wines_data[j][i];
+			buffer += collapsed_wines_data[j][i];
 		}
 		threshold.push_back(buffer / INITIAL_ROW);
 	}
@@ -296,29 +294,46 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 //[KHB] write to file in FuzzyC
 void FuzzyC::writeToFile() {
 
-	//open file for output
-	fstream fp; 
-	const char *filename = "MembershipData.txt"; //SOMEHOW MAKE %d equal global MOD value ("../res/MembershipData%d.txt", mod)
-	fp.open(filename); 
+	////open file for output
+	//fstream fp; 
+	//const char *filename = "MembershipData.txt"; //SOMEHOW MAKE %d equal global MOD value ("../res/MembershipData%d.txt", mod)
+	//fp.open(filename); 
 
-	//header 
-	fp << "Wines";
-	//Cluster numbers 
-	for (int i = 1; i <= clusters; i++) {
-		fp << ", " << i;
-	}
-	fp << "\n";
+	////header 
+	//fp << "Wines";
+	////Cluster numbers 
+	//for (int i = 1; i <= clusters; i++) {
+	//	fp << ", " << i;
+	//}
+	//fp << "\n";
 
-	//Membership data 
+	////Membership data 
+	//for (int i = 0; i < membership_data.size(); i++) {
+	//	fp << "Wine " << i + 1;
+	//	for (int j = 0; j < clusters; j++) {
+	//		double value = membership_data[i][j];
+	//		fp << ", " << value; 
+	//	}
+	//	fp << " \n";
+	//}
+
+	////close the text file 
+	//fp.close();
+	ofstream output_file("./test.txt" + to_string(mod + 1) + ".txt");
+	ostream_iterator<double> output_iterator(output_file, ", ");
 	for (int i = 0; i < membership_data.size(); i++) {
-		fp << "Wine " << i + 1;
-		for (int j = 0; j < clusters; j++) {
-			double value = membership_data[i][j];
-			fp << ", " << value; 
-		}
-		fp << " \n";
+		output_file << "Wine" + to_string(i + 1) + "\t";
+		copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
+		output_file << '\n';
 	}
+}
 
-	//close the text file 
-	fp.close();
+void FuzzyC::collapseData() {
+	collapsed_wines_data.clear();
+	for (int i = 0; i < wines_data.size(); i++) {
+		if (i % fold != mod) {
+			collapsed_wines_data.push_back(wines_data[i]);
+		}
+	}
+	INITIAL_ROW = collapsed_wines_data.size();
 }
