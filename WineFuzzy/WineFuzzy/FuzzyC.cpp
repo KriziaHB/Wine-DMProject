@@ -293,34 +293,10 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 
 //[KHB] write to file in FuzzyC
 void FuzzyC::writeToFile() {
-
-	////open file for output
-	//fstream fp; 
-	//const char *filename = "MembershipData.txt"; //SOMEHOW MAKE %d equal global MOD value ("../res/MembershipData%d.txt", mod)
-	//fp.open(filename); 
-
-	////header 
-	//fp << "Wines";
-	////Cluster numbers 
-	//for (int i = 1; i <= clusters; i++) {
-	//	fp << ", " << i;
-	//}
-	//fp << "\n";
-
-	////Membership data 
-	//for (int i = 0; i < membership_data.size(); i++) {
-	//	fp << "Wine " << i + 1;
-	//	for (int j = 0; j < clusters; j++) {
-	//		double value = membership_data[i][j];
-	//		fp << ", " << value; 
-	//	}
-	//	fp << " \n";
-	//}
-
-	////close the text file 
-	//fp.close();
+	//Open file for each iteration of mod
 	ofstream output_file("./test.txt" + to_string(mod + 1) + ".txt");
 	ostream_iterator<double> output_iterator(output_file, ", ");
+	//Write to file
 	for (int i = 0; i < membership_data.size(); i++) {
 		output_file << "Wine" + to_string(i + 1) + "\t";
 		copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
