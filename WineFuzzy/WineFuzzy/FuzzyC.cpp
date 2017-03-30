@@ -35,17 +35,29 @@ FuzzyC::~FuzzyC()
 {
 }
 //Calculate distance from each wine to each centroid
-double FuzzyC::jaccardDistance(int x1, int x2) {
+double FuzzyC::jaccardDistance(int x1, int x2, bool removed) {
+
 	double a = 0.0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
 	double b = 0.0; //# of attributes where A and B have value of 1 
 	double dist = 0.0;
 
-	// count up a (different values) and b (both have 1) between the two points 
-	for (int i = 0; i < 303; i++) {
-		if ((collapsed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
-			b++;
-		else if (collapsed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
-			a++;
+	if(!removed){
+		// count up a (different values) and b (both have 1) between the two points 
+		for (int i = 0; i < 303; i++) {
+			if ((collapsed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
+				b++;
+			else if (collapsed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
+				a++;
+		}
+	}
+	else {
+		// count up a (different values) and b (both have 1) between the two points 
+		for (int i = 0; i < 303; i++) {
+			if ((removed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
+				b++;
+			else if (removed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
+				a++;
+		}
 	}
 
 	//Formula: simplified by adding together both cases of 1 vs 0 when comparing wines 
@@ -152,7 +164,7 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 	vector<double> element;
 	for (int i = 0; i < INITIAL_ROW; i++) {
 			for (int j = 0; j < cluster_points.size(); j++) {
-				element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
+				element.push_back(jaccardDistance(i, cluster_points[j], false)); //Compare each wine to each other wine, find the distance
 			}
 			distance_data.push_back(element); //Store distance of each wine to wine index
 			element.clear();
