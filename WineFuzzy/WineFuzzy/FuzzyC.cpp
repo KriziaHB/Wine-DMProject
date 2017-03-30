@@ -311,7 +311,7 @@ void FuzzyC::writeToFile(bool modulus) {
 		for (int i = 0; i < distance_data.size(); i++) {
 			output_file_test_distance << "Wine " + to_string(removed_wines_previndex[i]) + ", ";
 			copy(distance_data[i].begin(), distance_data[i].end(), test_iterator);
-			output_file_removed_data << '\n';
+			output_file_test_distance << '\n';
 		}
 	}
 	else {
