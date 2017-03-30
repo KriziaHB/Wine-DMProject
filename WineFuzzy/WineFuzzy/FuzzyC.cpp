@@ -269,15 +269,28 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 
 
 //[KHB] write to file in FuzzyC
-void FuzzyC::writeToFile() {
-	//Open file for each iteration of mod
-	ofstream output_file("../res/membershipdata_split" + to_string(mod + 1) + ".txt");
-	ostream_iterator<double> output_iterator(output_file, ", ");
-	//Write to file
-	for (int i = 0; i < membership_data.size(); i++) {
-		output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + ", ";
-		copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
-		output_file << '\n';
+void FuzzyC::writeToFile(bool modulus) {
+	if (modulus) {
+		//Open file for each iteration of mod
+		ofstream output_file("../res/membershipdata_split" + to_string(mod + 1) + ".txt");
+		ostream_iterator<double> output_iterator(output_file, ", ");
+		//Write to file
+		for (int i = 0; i < membership_data.size(); i++) {
+			output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + ", ";
+			copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
+			output_file << '\n';
+		}
+	}
+	else {
+		//Open file for each iteration of mod
+		ofstream output_file("../res/membershipdata.txt");
+		ostream_iterator<double> output_iterator(output_file, ", ");
+		//Write to file
+		for (int i = 0; i < membership_data.size(); i++) {
+			output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + ", ";
+			copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
+			output_file << '\n';
+		}
 	}
 }
 
@@ -315,8 +328,7 @@ void FuzzyC::run() {
 			generateCenters();
 		} while (checkTermination());//Perform algorithm until convergence
 		//[KHB] write to file for SVM  
-		writeToFile();
-	}
+		writeToFile(false);
 }
 //[KHB] Five Fold testing, run 'FOLD' times with different folds being used and omitted 
 void FuzzyC::fiveFoldTest() {
@@ -334,7 +346,7 @@ void FuzzyC::fiveFoldTest() {
 			generateCenters();
 		} while (checkTermination());//Perform algorithm until convergence
 		//[KHB] write to file for SVM  
-		writeToFile();
+		writeToFile(true);
 		//[KHB] move to next set of folds 
 		mod++;
 	}

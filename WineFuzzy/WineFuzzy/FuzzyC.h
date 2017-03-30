@@ -38,6 +38,8 @@ public:
 	void generateCenters(); 
 	double tallyAttributes(); 
 	vector<double> manhattan2(int cluster, vector<double> e);
-	void writeToFile();
+	void writeToFile(bool modulus);
+	void run();
+	void fiveFoldTest();
 	void collapseData(bool option);
 };
