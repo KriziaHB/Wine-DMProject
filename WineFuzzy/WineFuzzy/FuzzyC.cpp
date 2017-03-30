@@ -303,6 +303,16 @@ void FuzzyC::writeToFile(bool modulus) {
 			copy(removed_wines_data.at(i).begin(), removed_wines_data.at(i).end(), removed_iterator);
 			output_file_removed_data << '\n';
 		}
+
+		//For Test Wine Distances
+		ofstream output_file_test_distance("../res/test_distance" + to_string(mod + 1) + ".txt");
+		ostream_iterator<double> test_iterator(output_file_test_distance, ", ");
+		//Write to file
+		for (int i = 0; i < distance_data.size(); i++) {
+			output_file_test_distance << "Wine " + to_string(removed_wines_previndex[i]) + ", ";
+			copy(distance_data[i].begin(), distance_data[i].end(), test_iterator);
+			output_file_removed_data << '\n';
+		}
 	}
 	else {
 		//Open file for each iteration of mod
@@ -373,6 +383,8 @@ void FuzzyC::fiveFoldTest() {
 			initializeMembership();
 			generateCenters();
 		} while (checkTermination());//Perform algorithm until convergence
+		//Calculate the distance of each Test/Removed Wine to the calculated centroids for SVM purposes
+		calculateTest();
 		//[KHB] write to file for SVM  
 		writeToFile(true);
 		//[KHB] move to next set of folds 

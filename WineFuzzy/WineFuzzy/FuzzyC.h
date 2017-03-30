@@ -31,6 +31,7 @@ public:
 	double jaccardDistance(int x1, int x2, bool test);
 	vector<double> calculateThreshold();
 	vector<vector<double>> calculateDistance();
+	vector<vector<double>> calculateTest();
 	vector<vector<double>> initializeMembership();
 	vector<vector<double>> storeIteration();
 	double calculateMembership(int wine, int cluster);
