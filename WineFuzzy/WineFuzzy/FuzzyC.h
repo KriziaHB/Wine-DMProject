@@ -10,11 +10,13 @@ private:
 	int m;
 	double termination_criterion = 0.5;
 	vector<int> collapsed_wines_previndex;
+	vector<int> removed_wines_previndex;
 	vector<double> threshold;
 	vector<int> cluster_points;
 	vector<vector<double>> distance_data;
 	vector<vector<double>> wines_data;
 	vector<vector<double>> collapsed_wines_data;
+	vector<vector<double>> removed_wines_data;
 	vector<vector<double>> membership_data;
 	vector<vector<double>> prev_membership_data;
 	double avgAttributes; 
