@@ -28,7 +28,7 @@ public:
 	~FuzzyC();
 	void initializeClusters();
 	bool checkTermination();
-	double jaccardDistance(int x1, int x2);
+	double jaccardDistance(int x1, int x2, bool test);
 	vector<double> calculateThreshold();
 	vector<vector<double>> calculateDistance();
 	vector<vector<double>> initializeMembership();
