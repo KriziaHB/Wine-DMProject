@@ -331,6 +331,7 @@ void FuzzyC::collapseData(bool option) {
 	collapsed_wines_data.clear();
 	collapsed_wines_previndex.clear();
 	removed_wines_data.clear();
+	removed_wines_previndex.clear();
 	if (option) {
 		for (int i = 0; i < wines_data.size(); i++) {
 			if (i % fold != mod) {
