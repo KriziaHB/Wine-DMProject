@@ -35,17 +35,29 @@ FuzzyC::~FuzzyC()
 {
 }
 //Calculate distance from each wine to each centroid
-double FuzzyC::jaccardDistance(int x1, int x2) {
+double FuzzyC::jaccardDistance(int x1, int x2, bool test) {
+
 	double a = 0.0; //# of attributes of A is 0 while 1 in B && # of attributes of A is 1 while 0 in B 
 	double b = 0.0; //# of attributes where A and B have value of 1 
 	double dist = 0.0;
 
-	// count up a (different values) and b (both have 1) between the two points 
-	for (int i = 0; i < 303; i++) {
-		if ((collapsed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
-			b++;
-		else if (collapsed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
-			a++;
+	if(!test){
+		// count up a (different values) and b (both have 1) between the two points 
+		for (int i = 0; i < 303; i++) {
+			if ((collapsed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
+				b++;
+			else if (collapsed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
+				a++;
+		}
+	}
+	else {
+		// count up a (different values) and b (both have 1) between the two points 
+		for (int i = 0; i < 303; i++) {
+			if ((removed_wines_data[x1].at(i) == 1) && (collapsed_wines_data[x2].at(i) == 1))
+				b++;
+			else if (removed_wines_data[x1].at(i) != collapsed_wines_data[x2].at(i))
+				a++;
+		}
 	}
 
 	//Formula: simplified by adding together both cases of 1 vs 0 when comparing wines 
@@ -152,7 +164,7 @@ vector<vector<double>> FuzzyC::calculateDistance() {
 	vector<double> element;
 	for (int i = 0; i < INITIAL_ROW; i++) {
 			for (int j = 0; j < cluster_points.size(); j++) {
-				element.push_back(jaccardDistance(i, cluster_points[j])); //Compare each wine to each other wine, find the distance
+				element.push_back(jaccardDistance(i, cluster_points[j], false)); //Compare each wine to each other wine, find the distance
 			}
 			distance_data.push_back(element); //Store distance of each wine to wine index
 			element.clear();
@@ -271,6 +283,7 @@ vector<double> FuzzyC::manhattan2(int cluster, vector<double> e)
 //[KHB] write to file in FuzzyC
 void FuzzyC::writeToFile(bool modulus) {
 	if (modulus) {
+		//For Modulus File
 		//Open file for each iteration of mod
 		ofstream output_file("../res/membershipdata_split" + to_string(mod + 1) + ".txt");
 		ostream_iterator<double> output_iterator(output_file, ", ");
@@ -279,6 +292,26 @@ void FuzzyC::writeToFile(bool modulus) {
 			output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + ", ";
 			copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
 			output_file << '\n';
+		}
+
+		//For removed attribute values
+		ofstream output_file_removed_data("../res/membership_removed" + to_string(mod + 1) + ".txt");
+		ostream_iterator<double> removed_iterator(output_file_removed_data, ", ");
+		//Write to file
+		for (int i = 0; i < removed_wines_data.size(); i++) {
+			output_file_removed_data << "Wine " + to_string(removed_wines_previndex[i]) + ", ";
+			copy(removed_wines_data.at(i).begin(), removed_wines_data.at(i).end(), removed_iterator);
+			output_file_removed_data << '\n';
+		}
+
+		//For Test Wine Distances
+		ofstream output_file_test_distance("../res/test_distance" + to_string(mod + 1) + ".txt");
+		ostream_iterator<double> test_iterator(output_file_test_distance, ", ");
+		//Write to file
+		for (int i = 0; i < distance_data.size(); i++) {
+			output_file_test_distance << "Wine " + to_string(removed_wines_previndex[i]) + ", ";
+			copy(distance_data[i].begin(), distance_data[i].end(), test_iterator);
+			output_file_test_distance << '\n';
 		}
 	}
 	else {
@@ -297,11 +330,17 @@ void FuzzyC::writeToFile(bool modulus) {
 void FuzzyC::collapseData(bool option) {
 	collapsed_wines_data.clear();
 	collapsed_wines_previndex.clear();
+	removed_wines_data.clear();
+	removed_wines_previndex.clear();
 	if (option) {
 		for (int i = 0; i < wines_data.size(); i++) {
 			if (i % fold != mod) {
 				collapsed_wines_data.push_back(wines_data[i]);
 				collapsed_wines_previndex.push_back(i);
+			}
+			else {
+				removed_wines_data.push_back(wines_data[i]);
+				removed_wines_previndex.push_back(i);
 			}
 		}
 	}
@@ -345,9 +384,25 @@ void FuzzyC::fiveFoldTest() {
 			initializeMembership();
 			generateCenters();
 		} while (checkTermination());//Perform algorithm until convergence
+		//Calculate the distance of each Test/Removed Wine to the calculated centroids for SVM purposes
+		calculateTest();
 		//[KHB] write to file for SVM  
 		writeToFile(true);
 		//[KHB] move to next set of folds 
 		mod++;
 	}
+}
+
+//Calculate the distance of Test wines for SVM
+vector<vector<double>> FuzzyC::calculateTest() {
+	distance_data.clear();
+	vector<double> element;
+	for (int i = 0; i < removed_wines_data.size(); i++) {
+		for (int j = 0; j < cluster_points.size(); j++) {
+			element.push_back(jaccardDistance(i, cluster_points[j], true)); //Compare each wine to each other wine, find the distance
+		}
+		distance_data.push_back(element); //Store distance of each wine to wine index
+		element.clear();
+	}
+	return distance_data;
 }
