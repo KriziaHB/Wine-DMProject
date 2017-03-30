@@ -39,5 +39,5 @@ public:
 	double tallyAttributes(); 
 	vector<double> manhattan2(int cluster, vector<double> e);
 	void writeToFile();
-	void collapseData();
+	void collapseData(bool option);
 };

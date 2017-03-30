@@ -300,13 +300,21 @@ void FuzzyC::writeToFile() {
 	}
 }
 
-void FuzzyC::collapseData() {
+void FuzzyC::collapseData(bool option) {
 	collapsed_wines_data.clear();
 	collapsed_wines_previndex.clear();
-	for (int i = 0; i < wines_data.size(); i++) {
-		if (i % fold != mod) {
-			collapsed_wines_data.push_back(wines_data[i]);
-			collapsed_wines_previndex.push_back(i);
+	if (option) {
+		for (int i = 0; i < wines_data.size(); i++) {
+			if (i % fold != mod) {
+				collapsed_wines_data.push_back(wines_data[i]);
+				collapsed_wines_previndex.push_back(i);
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < wines_data.size(); i++) {
+				collapsed_wines_data.push_back(wines_data[i]);
+				collapsed_wines_previndex.push_back(i);
 		}
 	}
 	INITIAL_ROW = collapsed_wines_data.size();
