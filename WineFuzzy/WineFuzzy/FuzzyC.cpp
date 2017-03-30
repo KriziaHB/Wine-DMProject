@@ -26,27 +26,7 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	m = m_value;
 
 	run();
-	//[KHB] Five Fold testing, run 'FOLD' times with different folds being used and omitted 
-	for (int i = 0; i < fold; i++) {
-		//Collapse Wines_Data based on modulus
-		collapseData(true);
-		//Generate random clusters based on current points
-		initializeClusters();
-		//Find the membership value for each wine to each cluster
-		initializeMembership();
-		//Generate new cluster centers based on membership values
-		generateCenters();
-		do {
-			initializeMembership();
-			generateCenters();
-		} while (checkTermination());//Perform algorithm until convergence
-
-		//[KHB] write to file for SVM  
-		writeToFile();
-
-		//[KHB] move to next set of folds 
- 		mod++; 
-	}
+	fiveFoldTest();
 
 	printf("Done");
 }
@@ -322,7 +302,6 @@ void FuzzyC::collapseData(bool option) {
 }
 
 void FuzzyC::run() {
-	for (int i = 0; i < fold; i++) {
 		//Collapse Wines_Data based on modulus
 		collapseData(false);
 		//Generate random clusters based on current points
@@ -335,8 +314,28 @@ void FuzzyC::run() {
 			initializeMembership();
 			generateCenters();
 		} while (checkTermination());//Perform algorithm until convergence
-
-									 //[KHB] write to file for SVM  
+		//[KHB] write to file for SVM  
 		writeToFile();
+	}
+}
+//[KHB] Five Fold testing, run 'FOLD' times with different folds being used and omitted 
+void FuzzyC::fiveFoldTest() {
+	for (int i = 0; i < fold; i++) {
+		//Collapse Wines_Data based on modulus
+		collapseData(true);
+		//Generate random clusters based on current points
+		initializeClusters();
+		//Find the membership value for each wine to each cluster
+		initializeMembership();
+		//Generate new cluster centers based on membership values
+		generateCenters();
+		do {
+			initializeMembership();
+			generateCenters();
+		} while (checkTermination());//Perform algorithm until convergence
+		//[KHB] write to file for SVM  
+		writeToFile();
+		//[KHB] move to next set of folds 
+		mod++;
 	}
 }
