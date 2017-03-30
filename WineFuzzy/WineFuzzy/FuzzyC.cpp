@@ -379,3 +379,17 @@ void FuzzyC::fiveFoldTest() {
 		mod++;
 	}
 }
+
+//Calculate the distance of Test wines for SVM
+vector<vector<double>> FuzzyC::calculateTest() {
+	distance_data.clear();
+	vector<double> element;
+	for (int i = 0; i < removed_wines_data.size(); i++) {
+		for (int j = 0; j < cluster_points.size(); j++) {
+			element.push_back(jaccardDistance(i, cluster_points[j], true)); //Compare each wine to each other wine, find the distance
+		}
+		distance_data.push_back(element); //Store distance of each wine to wine index
+		element.clear();
+	}
+	return distance_data;
+}
