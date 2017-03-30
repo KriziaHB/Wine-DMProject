@@ -20,6 +20,7 @@ private:
 	double avgAttributes; 
 	int fold = 5; 
 	int mod = 0; 
+	int option = 1; 
 public:
 	FuzzyC(int clusters, int m, string wines[1011][306]);
 	~FuzzyC();

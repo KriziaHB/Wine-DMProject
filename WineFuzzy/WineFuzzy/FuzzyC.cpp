@@ -103,31 +103,27 @@ void FuzzyC::generateCenters() {
 	vector<double> element;
 	for (int i = 0; i < cluster_points.size(); i++) {
 
-		//[KHB] COMMENT OUT WHEN using Option #2
-		for (int j = 0; j < INITIAL_COL; j++) {
-			element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
-		} //[KHB] end comment out 
+		//Both options of Manhattan (rounded & tally up) 
+		if (option == 1) {
+			for (int j = 0; j < INITIAL_COL; j++) {
+				element.push_back(calculateCentroid(j, i));//For each attribute calculate the centroid (or average of all points in attribute)
+			}
 
-		cluster_points[i] = collapsed_wines_data.size(); //Assign new index as the new cluster point
-
-		//[KHB] COMMENT OUT WHEN using Option #2
-		collapsed_wines_data.push_back(element); //Append new centroid to wine data
-		//[KHB] end comment out
-
-
-		/*
-		//[KHB] COMMENT OUT WHEN using Option #1										   
-		//THIS IS OPTION #2 for Manhattan tally up 
-		for (int a = 0; a < INITIAL_COL; a++) {
-			//For each attribute calculate the centroid (or average of all points in attribute)
-			//Utilize rounding for tally 
-			element.push_back(calculateCentroid(a, i)); 
+			cluster_points[i] = collapsed_wines_data.size(); //Assign new index as the new cluster point
+			collapsed_wines_data.push_back(element); //Append new centroid to wine data
 		}
-		wines_data.push_back(manhattan2(i, element)); 
-		//[KHB] end Option #2
-		*/
+		else {
+			//[KHB] option #2 for Manhattan tally up
+			cluster_points[i] = collapsed_wines_data.size(); //Assign new index as the new cluster point
+			
+			for (int a = 0; a < INITIAL_COL; a++) {
+				//For each attribute calculate the centroid (or average of all points in attribute)
+				//Utilize rounding for tally 
+				element.push_back(calculateCentroid(a, i));
+			}
+			wines_data.push_back(manhattan2(i, element));
+		}
 
-		//KEEP 
 		element.clear();
 	}
 }
@@ -298,7 +294,7 @@ void FuzzyC::writeToFile() {
 	ostream_iterator<double> output_iterator(output_file, ", ");
 	//Write to file
 	for (int i = 0; i < membership_data.size(); i++) {
-		output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + "\t";
+		output_file << "Wine " + to_string(collapsed_wines_previndex[i]) + ", ";
 		copy(membership_data.at(i).begin(), membership_data.at(i).end(), output_iterator);
 		output_file << '\n';
 	}
