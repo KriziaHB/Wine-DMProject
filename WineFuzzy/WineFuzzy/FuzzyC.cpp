@@ -25,10 +25,11 @@ FuzzyC::FuzzyC(int clusters, int m_value, string wines[1011][306])
 	//Sets the m value for fuzzyness
 	m = m_value;
 
+	run();
 	//[KHB] Five Fold testing, run 'FOLD' times with different folds being used and omitted 
 	for (int i = 0; i < fold; i++) {
 		//Collapse Wines_Data based on modulus
-		collapseData();
+		collapseData(true);
 		//Generate random clusters based on current points
 		initializeClusters();
 		//Find the membership value for each wine to each cluster
@@ -318,4 +319,24 @@ void FuzzyC::collapseData(bool option) {
 		}
 	}
 	INITIAL_ROW = collapsed_wines_data.size();
+}
+
+void FuzzyC::run() {
+	for (int i = 0; i < fold; i++) {
+		//Collapse Wines_Data based on modulus
+		collapseData(false);
+		//Generate random clusters based on current points
+		initializeClusters();
+		//Find the membership value for each wine to each cluster
+		initializeMembership();
+		//Generate new cluster centers based on membership values
+		generateCenters();
+		do {
+			initializeMembership();
+			generateCenters();
+		} while (checkTermination());//Perform algorithm until convergence
+
+									 //[KHB] write to file for SVM  
+		writeToFile();
+	}
 }
